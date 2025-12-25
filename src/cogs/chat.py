@@ -81,7 +81,7 @@ class Chat(commands.Cog):
 
             except Exception as e:
                 print(f"Lỗi Gemini: {e}")
-                await ctx.send(f"Chậc... Mệt quá, đầu óc ta đang không load được. Hãy cung cấp cho tôi **{e.status_code}** viên kẹo đi. Tôi sẽ tiếp tục làm việc.")
+                await ctx.send(f"Chậc... Mệt quá, đầu óc tôi đang không load được. Hãy cung cấp cho tôi **{e.status_code}** viên kẹo đi. Tôi sẽ tiếp tục làm việc.")
 
 async def setup(bot):
     await bot.add_cog(Chat(bot))
