@@ -1,0 +1,5 @@
+discord.py
+telethon
+python-dotenv
+pymongo
+dnspython

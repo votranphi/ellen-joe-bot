@@ -1,2 +1,5 @@
-# ellen-joe-bot
-Ellen Joe Discord bot
+# How to run
+```bash
+pip install -r requirements.txt
+python -m src.bot
+```
