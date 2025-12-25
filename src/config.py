@@ -24,5 +24,10 @@ TELEGRAM_SOURCES = {
         'tele_id': get_env_int('TELE_H_CHANNEL_ID'),
         'name': 'Hiragara Leaks',
         'icon_url': 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTT9Cag-1GSvCyUuP10mVXkP2R7MZpU6BSZa0Uw9iaBFxtXLjZQ'
+    },
+    'test': {
+        'tele_id': get_env_int('TELE_T_CHANNEL_ID'),
+        'name': 'Test',
+        'icon_url': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFfUnCIPVTtIm4RpwIrOehAhXxNXeuKY2TZQ&s'
     }
 }
