@@ -44,5 +44,23 @@ class Admin(commands.Cog):
         embed.set_thumbnail(url=source_info['icon_url'])
         await ctx.send(embed=embed)
 
+    @commands.command(name="remove", aliases=['stop', 'unsubscribe'])
+    @commands.has_permissions(administrator=True)
+    async def remove_channel(self, ctx):
+        """Hủy nhận tin ở kênh hiện tại: !remove"""
+        
+        # Gọi hàm xóa trong database
+        is_deleted = await db.remove_mapping(ctx.channel.id)
+        
+        if is_deleted:
+            embed = discord.Embed(
+                title="✅ Đã hủy đăng ký",
+                description="Kênh này sẽ **không còn nhận tin nhắn** tự động nữa.",
+                color=0xff0000 # Màu đỏ
+            )
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("⚠️ Kênh này chưa được setup nguồn nào cả.")
+
 async def setup(bot):
     await bot.add_cog(Admin(bot))

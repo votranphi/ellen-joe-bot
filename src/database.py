@@ -44,4 +44,10 @@ class Database:
             upsert=True                 # Nếu chưa có thì tạo mới
         )
 
+    async def remove_mapping(self, discord_id):
+            # delete_one: Xóa dòng dữ liệu khớp với discord_id
+            result = await asyncio.to_thread(self.collection.delete_one, {"discord_id": discord_id})
+            # Trả về True nếu xóa thành công (tìm thấy data), False nếu không tìm thấy
+            return result.deleted_count > 0
+
 db = Database()
