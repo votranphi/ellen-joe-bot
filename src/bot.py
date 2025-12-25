@@ -17,6 +17,7 @@ class MyBot(commands.Bot):
         # Load các Extensions
         await self.load_extension('src.cogs.admin')
         await self.load_extension('src.cogs.bridge')
+        await self.load_extension('src.cogs.chat')
         print("✅ Extensions Loaded")
 
     async def on_ready(self):

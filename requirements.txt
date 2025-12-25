@@ -3,3 +3,4 @@ telethon
 python-dotenv
 pymongo
 dnspython
+google-generativeai
