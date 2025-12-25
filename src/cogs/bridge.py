@@ -102,35 +102,49 @@ class TelegramBridge(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def sync_history(self, ctx, limit: int = 5):
         """Đồng bộ tin nhắn cũ: !sync 5"""
-        await ctx.send(f"⏳ Đang đồng bộ {limit} tin nhắn gần nhất...")
         
-        # 1. Xác định kênh hiện tại đang map với nguồn nào
+        # 1. Xóa tin nhắn lệnh của người dùng (!sync) để dọn dẹp ngay từ đầu
+        try:
+            await ctx.message.delete()
+        except:
+            pass # Bỏ qua nếu bot không có quyền xóa tin nhắn người khác
+
+        # 2. Gửi tin nhắn trạng thái ban đầu và lưu vào biến status_msg
+        status_msg = await ctx.send(f"⏳ Đang đồng bộ {limit} tin nhắn gần nhất...")
+        
+        # 3. Xác định kênh hiện tại đang map với nguồn nào
         source_key = await db.get_source_by_discord_id(ctx.channel.id)
         
         if not source_key:
-            await ctx.send("❌ Kênh này chưa được setup. Dùng lệnh `!setup <source>` trước.")
+            # Sửa nội dung tin nhắn thông báo và xóa sau 5s
+            await status_msg.edit(content="❌ Kênh này chưa được setup. Dùng lệnh `!setup <source>` trước.")
+            await status_msg.delete(delay=5)
             return
             
         source_info = TELEGRAM_SOURCES.get(source_key)
         tele_id = source_info['tele_id']
         
-        # 2. Lấy tin nhắn từ Telegram
+        # 4. Lấy tin nhắn từ Telegram
         try:
             messages = await self.t_client.get_messages(tele_id, limit=limit)
         except Exception as e:
-            await ctx.send(f"❌ Lỗi Telegram: {e}")
+            await status_msg.edit(content=f"❌ Lỗi Telegram: {e}")
+            await status_msg.delete(delay=10)
             return
 
         if not messages:
-            await ctx.send("⚠️ Không tìm thấy tin nhắn nào.")
+            await status_msg.edit(content="⚠️ Không tìm thấy tin nhắn nào.")
+            await status_msg.delete(delay=5)
             return
 
-        # 3. Gửi tin (Dùng lại hàm forward_to_discord nhưng chỉ cho kênh hiện tại)
+        # 5. Gửi tin (Dùng lại hàm forward_to_discord nhưng chỉ cho kênh hiện tại)
         for msg in reversed(messages):
             await self.forward_to_discord(msg, [ctx.channel.id])
             await asyncio.sleep(1.5) # Delay để tránh rate limit
 
-        await ctx.send("✅ Đồng bộ hoàn tất!")
+        # 6. Thông báo hoàn tất và tự xóa sau 3 giây
+        await status_msg.edit(content="✅ Đồng bộ hoàn tất!")
+        await status_msg.delete(delay=3)
 
 async def setup(bot):
     await bot.add_cog(TelegramBridge(bot))
