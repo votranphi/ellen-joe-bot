@@ -34,7 +34,7 @@ class Help(commands.Cog):
         # Nhóm lệnh Quản trị
         embed.add_field(
             name="🛠️ Quản trị & Hệ thống",
-            value="`.clean <số lượng>`: Dọn dẹp tin nhắn cho sạch sẽ.\n`.ping`: Kiểm tra xem tôi có đang ngủ gật không.",
+            value="`.clean <số lượng>`: Dọn dẹp tin nhắn cho sạch sẽ.\n`.ping`: Kiểm tra xem tôi có đang ngủ gật không.\n`.version` hoặc `.v`: Xem phiên bản bot hiện tại.",
             inline=False
         )
 

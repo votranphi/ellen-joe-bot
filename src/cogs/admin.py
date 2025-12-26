@@ -3,6 +3,7 @@ from discord.ext import commands
 from src.database import db
 from src.config import TELEGRAM_SOURCES
 from src.utils import create_ellen_embed
+from src.version import __version__
 
 class Admin(commands.Cog):
     def __init__(self, bot):
@@ -79,6 +80,15 @@ class Admin(commands.Cog):
         # If you need the bot avatar in footer, you can manually override:
         # embed.set_footer(text="Victoria Housekeeping Co.", icon_url=self.bot.user.avatar.url if self.bot.user.avatar else None)
         
+        await ctx.send(embed=embed)
+
+    @commands.command(name="version", aliases=['v'])
+    async def version(self, ctx):
+        """Kiểm tra phiên bản bot: .version hoặc .v"""
+        embed = create_ellen_embed(
+            title="📋 Phiên bản hệ thống",
+            description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đi làm việc đi, đừng phiền tôi nữa."
+        )
         await ctx.send(embed=embed)
 
 async def setup(bot):
