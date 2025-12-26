@@ -9,7 +9,7 @@ load_dotenv()
 intents = discord.Intents.default()
 intents.message_content = True
 
-class MyBot(commands.Bot):
+class EllenJoeBot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix='.', intents=intents, help_command=None)
 
@@ -23,7 +23,7 @@ class MyBot(commands.Bot):
     async def on_ready(self):
         print(f'Logged in as {self.user}')
 
-bot = MyBot()
+bot = EllenJoeBot()
 
 if __name__ == "__main__":
     bot.run(os.getenv('DISCORD_TOKEN'))
