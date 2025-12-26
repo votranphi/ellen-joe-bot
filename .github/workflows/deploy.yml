@@ -1,0 +1,59 @@
+name: Deploy Ellen Joe Bot
+
+on:
+  push:
+    branches:
+      - main  # Hoặc tên nhánh chính của bạn (master)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Bước 1: Lấy code từ GitHub về máy ảo chạy Action
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Bước 2: Copy file từ GitHub sang VPS (Dùng SCP)
+      - name: Copy files to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          source: "."
+          # Loại bỏ các file không cần thiết hoặc file nhạy cảm để tránh ghi đè nhầm
+          # Lưu ý: file .session đã được gitignore nên sẽ không có ở đây để mà ghi đè
+          exclude: ".git,.github,.env" 
+          target: ${{ secrets.PROJECT_PATH }}
+          # Quan trọng: rm = false để KHÔNG xóa thư mục cũ, giữ lại .session và .env
+          rm: false 
+
+      # Bước 3: SSH vào VPS để cài thư viện và khởi động lại Bot
+      - name: Install Dependencies & Restart Bot
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            # Di chuyển vào thư mục dự án
+            cd ${{ secrets.PROJECT_PATH }}
+            
+            # 1. Cài đặt các thư viện mới (nếu có cập nhật trong requirements.txt)
+            # Dùng pip module để đảm bảo đúng phiên bản python
+            python3 -m pip install -r requirements.txt
+            
+            # 2. Tắt process bot cũ đang chạy (nếu có)
+            # Tìm process có tên "src.bot" và kill nó
+            # "|| true" giúp lệnh không báo lỗi nếu không tìm thấy bot đang chạy (lần deploy đầu tiên)
+            pkill -f "src.bot" || true
+            
+            # Chờ 2 giây để process tắt hẳn
+            sleep 2
+
+            # 3. Chạy bot mới bằng nohup (theo hướng dẫn trong README của bạn)
+            # > bot_output.log 2>&1: Ghi log ra file để debug nếu cần
+            # &: Chạy nền
+            nohup python3 -u -m src.bot > bot_output.log 2>&1 &
+            
+            echo "✅ Deployment Completed: Bot has been restarted."
