@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from src.database import db
-from src.config import TELEGRAM_SOURCES
+from src.config import TELEGRAM_SOURCES, ELLEN_AVATAR_URL
 
 class Admin(commands.Cog):
     def __init__(self, bot):
@@ -67,7 +67,19 @@ class Admin(commands.Cog):
         """Kiểm tra bot còn sống không: !ping"""
         # self.bot.latency trả về giây, nhân 1000 để ra mili giây
         latency = round(self.bot.latency * 1000)
-        await ctx.send(f"Ping cái gì mà ping? Mau đưa {latency} viên kẹo đây!")
+        
+        # Tạo Embed
+        embed = discord.Embed(
+            title="🦈 Shark Ping",
+            description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo (ms)** đây 🍬🍭",
+            color=0xD7342A # Màu đỏ đặc trưng (giống trong chat.py)
+        )
+        
+        # Thêm Thumbnail (Avatar của Ellen) và Footer
+        embed.set_thumbnail(url=ELLEN_AVATAR_URL)
+        embed.set_footer(text="Victoria Housekeeping Co.", icon_url=self.bot.user.avatar.url if self.bot.user.avatar else None)
+        
+        await ctx.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Admin(bot))
