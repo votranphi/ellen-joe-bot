@@ -62,5 +62,12 @@ class Admin(commands.Cog):
         else:
             await ctx.send("⚠️ Kênh này chưa được setup nguồn nào cả.")
 
+    @commands.command(name="ping")
+    async def ping(self, ctx):
+        """Kiểm tra bot còn sống không: !ping"""
+        # self.bot.latency trả về giây, nhân 1000 để ra mili giây
+        latency = round(self.bot.latency * 1000)
+        await ctx.send(f"Ping cái gì mà ping? Mau đưa {latency} viên kẹo đây!")
+
 async def setup(bot):
     await bot.add_cog(Admin(bot))
