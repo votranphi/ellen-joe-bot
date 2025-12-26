@@ -101,9 +101,9 @@ class TelegramBridge(commands.Cog):
     @commands.command(name="sync")
     @commands.has_permissions(administrator=True)
     async def sync_history(self, ctx, limit: int = 5):
-        """Đồng bộ tin nhắn cũ: !sync 5"""
+        """Đồng bộ tin nhắn cũ: .sync 5"""
         
-        # 1. Xóa tin nhắn lệnh của người dùng (!sync) để dọn dẹp ngay từ đầu
+        # 1. Xóa tin nhắn lệnh của người dùng (.sync) để dọn dẹp ngay từ đầu
         try:
             await ctx.message.delete()
         except:
@@ -117,7 +117,7 @@ class TelegramBridge(commands.Cog):
         
         if not source_key:
             # Sửa nội dung tin nhắn thông báo và xóa sau 5s
-            await status_msg.edit(content="❌ Kênh này chưa được setup. Dùng lệnh `!setup <source>` trước.")
+            await status_msg.edit(content="❌ Kênh này chưa được setup. Dùng lệnh `.setup <source>` trước.")
             await status_msg.delete(delay=5)
             return
             

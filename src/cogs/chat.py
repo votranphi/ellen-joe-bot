@@ -42,7 +42,7 @@ class Chat(commands.Cog):
 
     @commands.command(name="chat")
     async def chat_with_ellen(self, ctx, *, message: str = None):
-        """Trò chuyện với Ellen Joe: !chat <nội dung>"""
+        """Trò chuyện với Ellen Joe: .chat <nội dung>"""
         
         if not message:
             await ctx.send("Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy.")

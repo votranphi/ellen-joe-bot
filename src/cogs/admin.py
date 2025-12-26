@@ -10,7 +10,7 @@ class Admin(commands.Cog):
     @commands.command(name="clean")
     @commands.has_permissions(manage_messages=True)
     async def clean_messages(self, ctx, amount: int):
-        """Dọn dẹp tin nhắn: !clean 10"""
+        """Dọn dẹp tin nhắn: .clean 10"""
         await ctx.channel.purge(limit=amount + 1) # +1 để xóa luôn câu lệnh clean
         msg = await ctx.send(f"🧹 Đã dọn {amount} tin nhắn.")
         await msg.delete(delay=3)
@@ -18,7 +18,7 @@ class Admin(commands.Cog):
     @commands.command(name="setup")
     @commands.has_permissions(administrator=True)
     async def setup_channel(self, ctx, source_key: str = None):
-        """Setup kênh hiện tại nhận tin từ nguồn nào: !setup nens"""
+        """Setup kênh hiện tại nhận tin từ nguồn nào: .setup nens"""
         if not source_key:
             sources = ", ".join([f"`{k}`" for k in TELEGRAM_SOURCES.keys()])
             await ctx.send(f"⚠️ Vui lòng chọn nguồn. Các nguồn hiện có: {sources}")
@@ -47,7 +47,7 @@ class Admin(commands.Cog):
     @commands.command(name="remove", aliases=['stop', 'unsubscribe'])
     @commands.has_permissions(administrator=True)
     async def remove_channel(self, ctx):
-        """Hủy nhận tin ở kênh hiện tại: !remove"""
+        """Hủy nhận tin ở kênh hiện tại: .remove"""
         
         # Gọi hàm xóa trong database
         is_deleted = await db.remove_mapping(ctx.channel.id)
@@ -64,7 +64,7 @@ class Admin(commands.Cog):
 
     @commands.command(name="ping")
     async def ping(self, ctx):
-        """Kiểm tra bot còn sống không: !ping"""
+        """Kiểm tra bot còn sống không: .ping"""
         # self.bot.latency trả về giây, nhân 1000 để ra mili giây
         latency = round(self.bot.latency * 1000)
         

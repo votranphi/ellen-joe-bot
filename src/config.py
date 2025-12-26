@@ -8,7 +8,7 @@ def get_env_int(key):
     return int(val) if val and val.lstrip('-').isdigit() else None
 
 # Danh sách các nguồn có thể Setup
-# Key: Tên định danh dùng trong lệnh !setup
+# Key: Tên định danh dùng trong lệnh .setup
 TELEGRAM_SOURCES = {
     'nens': {
         'tele_id': get_env_int('TELE_NENS_CHANNEL_ID'),
