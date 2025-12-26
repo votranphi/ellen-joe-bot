@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from src.utils import create_ellen_embed
+from src.version import __version__
 
 class Help(commands.Cog):
     def __init__(self, bot):
@@ -13,7 +14,7 @@ class Help(commands.Cog):
         embed = create_ellen_embed(
             title="Bảng công việc (Help Menu)",
             description="Phiền phức thật đấy... Xem nhanh đi để tôi còn đi nghỉ. Đây là những gì tôi có thể làm:",
-            footer_text="Victoria Housekeeping Co. • Xong việc thì để tôi yên."
+            footer_text=f"Victoria Housekeeping Co. • v{__version__} • Xong việc thì để tôi yên."
         )
         
         # Nhóm lệnh Trò chuyện
