@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import google.generativeai as genai
 import os
-from src.config import ELLEN_AVATAR_URL
+from src.utils import create_ellen_embed
 
 # Cấu hình tính cách và bảo mật
 SYSTEM_INSTRUCTION = """
@@ -46,15 +46,9 @@ class Chat(commands.Cog):
         
         if not message:
             # Tạo Embed cảnh báo
-            embed = discord.Embed(
-                description="Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy.",
-                color=0xD7342A
+            embed = create_ellen_embed(
+                description="Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy."
             )
-            # Setup giao diện Ellen
-            embed.set_author(name="Ellen Joe", icon_url=ELLEN_AVATAR_URL)
-            embed.set_thumbnail(url=ELLEN_AVATAR_URL)
-            embed.set_footer(text="Victoria Housekeeping Co.")
-            
             await ctx.send(embed=embed)
             return
 
@@ -70,37 +64,16 @@ class Chat(commands.Cog):
                 reply_text = response.text
 
                 # Tạo Embed Message
-                embed = discord.Embed(
-                    description=reply_text,
-                    color=0xD7342A # Màu đỏ đặc trưng của Ellen/Victoria Housekeeping
-                )
-                
-                # Setup phần Author (Tiêu đề nhỏ ở trên)
-                embed.set_author(
-                    name="Ellen Joe", 
-                    icon_url=ELLEN_AVATAR_URL
-                )
-                
-                # Setup Thumbnail (Ảnh vuông 1x1 ở góc phải)
-                embed.set_thumbnail(url=ELLEN_AVATAR_URL)
-                
-                # Footer nhỏ
-                embed.set_footer(text="Victoria Housekeeping Co.")
+                embed = create_ellen_embed(description=reply_text)
 
                 await ctx.send(embed=embed)
 
             except Exception as e:
                 print(f"Lỗi Gemini: {e}")
                 
-                embed = discord.Embed(
-                    description=f"Chậc... Mệt quá, đầu óc tôi đang không load được. Hãy cung cấp cho tôi **{e.code}** viên kẹo đi. Tôi sẽ tiếp tục làm việc.",
-                    color=0xD7342A
+                embed = create_ellen_embed(
+                    description=f"Chậc... Mệt quá, đầu óc tôi đang không load được. Hãy cung cấp cho tôi **{e.code}** viên kẹo đi. Tôi sẽ tiếp tục làm việc."
                 )
-                
-                # Setup giao diện Ellen
-                embed.set_author(name="Ellen Joe", icon_url=ELLEN_AVATAR_URL)
-                embed.set_thumbnail(url=ELLEN_AVATAR_URL)
-                embed.set_footer(text="Victoria Housekeeping Co.")
                 
                 await ctx.send(embed=embed)
 

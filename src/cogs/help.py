@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from src.config import ELLEN_AVATAR_URL
+from src.utils import create_ellen_embed
 
 class Help(commands.Cog):
     def __init__(self, bot):
@@ -10,10 +10,10 @@ class Help(commands.Cog):
     async def help_command(self, ctx):
         """Hiển thị danh sách lệnh của Ellen: .help"""
         
-        embed = discord.Embed(
+        embed = create_ellen_embed(
             title="Bảng công việc (Help Menu)",
             description="Phiền phức thật đấy... Xem nhanh đi để tôi còn đi nghỉ. Đây là những gì tôi có thể làm:",
-            color=0xD7342A # Màu đỏ đặc trưng của Victoria Housekeeping
+            footer_text="Victoria Housekeeping Co. • Xong việc thì để tôi yên."
         )
         
         # Nhóm lệnh Trò chuyện
@@ -36,11 +36,6 @@ class Help(commands.Cog):
             value="`.clean <số lượng>`: Dọn dẹp tin nhắn cho sạch sẽ.\n`.ping`: Kiểm tra xem tôi có đang ngủ gật không.",
             inline=False
         )
-
-        # Trang trí theo phong cách Ellen
-        embed.set_author(name="Ellen Joe", icon_url=ELLEN_AVATAR_URL)
-        embed.set_thumbnail(url=ELLEN_AVATAR_URL)
-        embed.set_footer(text="Victoria Housekeeping Co. • Xong việc thì để tôi yên.")
 
         await ctx.send(embed=embed)
 

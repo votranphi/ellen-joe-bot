@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
 from src.database import db
-from src.config import TELEGRAM_SOURCES, ELLEN_AVATAR_URL
+from src.config import TELEGRAM_SOURCES
+from src.utils import create_ellen_embed
 
 class Admin(commands.Cog):
     def __init__(self, bot):
@@ -69,15 +70,14 @@ class Admin(commands.Cog):
         latency = round(self.bot.latency * 1000)
         
         # Tạo Embed
-        embed = discord.Embed(
+        embed = create_ellen_embed(
             title="🦈 Shark Ping",
-            description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭",
-            color=0xD7342A # Màu đỏ đặc trưng (giống trong chat.py)
+            description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭"
         )
         
-        # Thêm Thumbnail (Avatar của Ellen) và Footer
-        embed.set_thumbnail(url=ELLEN_AVATAR_URL)
-        embed.set_footer(text="Victoria Housekeeping Co.", icon_url=self.bot.user.avatar.url if self.bot.user.avatar else None)
+        # Note: The footer icon is intentionally not added as the helper uses a standard footer
+        # If you need the bot avatar in footer, you can manually override:
+        # embed.set_footer(text="Victoria Housekeeping Co.", icon_url=self.bot.user.avatar.url if self.bot.user.avatar else None)
         
         await ctx.send(embed=embed)
 
