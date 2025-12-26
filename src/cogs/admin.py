@@ -71,7 +71,7 @@ class Admin(commands.Cog):
         # Tạo Embed
         embed = discord.Embed(
             title="🦈 Shark Ping",
-            description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭",
+            description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭🍬",
             color=0xD7342A # Màu đỏ đặc trưng (giống trong chat.py)
         )
         
