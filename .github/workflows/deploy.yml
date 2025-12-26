@@ -46,7 +46,7 @@ jobs:
             # 2. Tắt process bot cũ đang chạy (nếu có)
             # Tìm process có tên "src.bot" và kill nó
             # "|| true" giúp lệnh không báo lỗi nếu không tìm thấy bot đang chạy (lần deploy đầu tiên)
-            pkill -f "src.bot" || true
+            pgrep -f "src.bot" | grep -v $$ | xargs -r kill -9 || true
             
             # Chờ 2 giây để process tắt hẳn
             sleep 2
