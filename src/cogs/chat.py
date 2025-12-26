@@ -45,7 +45,17 @@ class Chat(commands.Cog):
         """Trò chuyện với Ellen Joe: .chat <nội dung>"""
         
         if not message:
-            await ctx.send("Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy.")
+            # Tạo Embed cảnh báo
+            embed = discord.Embed(
+                description="Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy.",
+                color=0xD7342A
+            )
+            # Setup giao diện Ellen
+            embed.set_author(name="Ellen Joe", icon_url=ELLEN_AVATAR_URL)
+            embed.set_thumbnail(url=ELLEN_AVATAR_URL)
+            embed.set_footer(text="Victoria Housekeeping Co.")
+            
+            await ctx.send(embed=embed)
             return
 
         # Hiển thị trạng thái "Đang nhập..." để bot trông tự nhiên hơn
@@ -81,7 +91,18 @@ class Chat(commands.Cog):
 
             except Exception as e:
                 print(f"Lỗi Gemini: {e}")
-                await ctx.send(f"Chậc... Mệt quá, đầu óc tôi đang không load được. Hãy cung cấp cho tôi **{e.code}** viên kẹo đi. Tôi sẽ tiếp tục làm việc.")
+                
+                embed = discord.Embed(
+                    description=f"Chậc... Mệt quá, đầu óc tôi đang không load được. Hãy cung cấp cho tôi **{e.code}** viên kẹo đi. Tôi sẽ tiếp tục làm việc.",
+                    color=0xD7342A
+                )
+                
+                # Setup giao diện Ellen
+                embed.set_author(name="Ellen Joe", icon_url=ELLEN_AVATAR_URL)
+                embed.set_thumbnail(url=ELLEN_AVATAR_URL)
+                embed.set_footer(text="Victoria Housekeeping Co.")
+                
+                await ctx.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Chat(bot))
