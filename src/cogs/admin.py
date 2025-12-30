@@ -10,16 +10,16 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.hybrid_command(name="clean", description="[Admin Only] Dọn dẹp tin nhắn trong kênh")
+    @commands.hybrid_command(name="clean", description="[Manage Messages] Dọn dẹp tin nhắn trong kênh")
     @app_commands.describe(amount="Số lượng tin nhắn cần xóa")
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(manage_messages=True)
     async def clean_messages(self, ctx, amount: int):
         """Dọn dẹp tin nhắn: .clean 10"""
         await ctx.channel.purge(limit=amount + 1) # +1 để xóa luôn câu lệnh clean
         msg = await ctx.send(f"🧹 Đã dọn {amount} tin nhắn.")
         await msg.delete(delay=3)
 
-    @commands.hybrid_command(name="setup", description="[Admin Only] Cấu hình kênh này nhận tin từ nguồn Telegram")
+    @commands.hybrid_command(name="setup", description="[Admin] Cấu hình kênh này nhận tin từ nguồn Telegram")
     @app_commands.describe(source_key="Mã nguồn (nens, hiragara, seele)")
     @commands.has_permissions(administrator=True)
     async def setup_channel(self, ctx, source_key: str = None):
@@ -49,7 +49,7 @@ class Admin(commands.Cog):
         embed.set_thumbnail(url=source_info['icon_url'])
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(name="remove", aliases=['stop', 'unsubscribe'], description="[Admin Only] Hủy nhận tin tự động ở kênh hiện tại")
+    @commands.hybrid_command(name="remove", aliases=['stop', 'unsubscribe'], description="[Admin] Hủy nhận tin tự động ở kênh hiện tại")
     @commands.has_permissions(administrator=True)
     async def remove_channel(self, ctx):
         """Hủy nhận tin ở kênh hiện tại: .remove"""
@@ -94,7 +94,7 @@ class Admin(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(name="synctree", description="[Admin Only] Đồng bộ slash commands lên Discord")
+    @commands.hybrid_command(name="synctree", description="[Admin] Đồng bộ slash commands lên Discord")
     @commands.has_permissions(administrator=True)
     async def sync_tree(self, ctx):
         """Đồng bộ command tree lên Discord - chỉ dành cho admin"""
