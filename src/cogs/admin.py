@@ -10,9 +10,9 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.hybrid_command(name="clean", description="Dọn dẹp tin nhắn trong kênh")
+    @commands.hybrid_command(name="clean", description="[Admin Only] Dọn dẹp tin nhắn trong kênh")
     @app_commands.describe(amount="Số lượng tin nhắn cần xóa")
-    @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(administrator=True)
     async def clean_messages(self, ctx, amount: int):
         """Dọn dẹp tin nhắn: .clean 10"""
         await ctx.channel.purge(limit=amount + 1) # +1 để xóa luôn câu lệnh clean
