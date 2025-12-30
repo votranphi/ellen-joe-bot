@@ -1,4 +1,5 @@
 import discord
+from discord import app_commands
 from discord.ext import commands
 from src.database import db
 from src.config import TELEGRAM_SOURCES
@@ -9,7 +10,8 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="clean")
+    @commands.hybrid_command(name="clean", description="Dọn dẹp tin nhắn trong kênh")
+    @app_commands.describe(amount="Số lượng tin nhắn cần xóa")
     @commands.has_permissions(manage_messages=True)
     async def clean_messages(self, ctx, amount: int):
         """Dọn dẹp tin nhắn: .clean 10"""
@@ -17,7 +19,8 @@ class Admin(commands.Cog):
         msg = await ctx.send(f"🧹 Đã dọn {amount} tin nhắn.")
         await msg.delete(delay=3)
 
-    @commands.command(name="setup")
+    @commands.hybrid_command(name="setup", description="[Admin Only] Cấu hình kênh này nhận tin từ nguồn Telegram")
+    @app_commands.describe(source_key="Mã nguồn (nens, hiragara, seele)")
     @commands.has_permissions(administrator=True)
     async def setup_channel(self, ctx, source_key: str = None):
         """Setup kênh hiện tại nhận tin từ nguồn nào: .setup nens"""
@@ -46,7 +49,7 @@ class Admin(commands.Cog):
         embed.set_thumbnail(url=source_info['icon_url'])
         await ctx.send(embed=embed)
 
-    @commands.command(name="remove", aliases=['stop', 'unsubscribe'])
+    @commands.hybrid_command(name="remove", aliases=['stop', 'unsubscribe'], description="[Admin Only] Hủy nhận tin tự động ở kênh hiện tại")
     @commands.has_permissions(administrator=True)
     async def remove_channel(self, ctx):
         """Hủy nhận tin ở kênh hiện tại: .remove"""
@@ -64,7 +67,7 @@ class Admin(commands.Cog):
         else:
             await ctx.send("⚠️ Kênh này chưa được setup nguồn nào cả.")
 
-    @commands.command(name="ping")
+    @commands.hybrid_command(name="ping", description="Kiểm tra độ trễ kết nối của bot")
     async def ping(self, ctx):
         """Kiểm tra bot còn sống không: .ping"""
         # self.bot.latency trả về giây, nhân 1000 để ra mili giây
@@ -82,7 +85,7 @@ class Admin(commands.Cog):
         
         await ctx.send(embed=embed)
 
-    @commands.command(name="version", aliases=['v'])
+    @commands.hybrid_command(name="version", aliases=['v'], description="Hiển thị phiên bản hiện tại của bot")
     async def version(self, ctx):
         """Kiểm tra phiên bản bot: .version hoặc .v"""
         embed = create_ellen_embed(
@@ -90,6 +93,25 @@ class Admin(commands.Cog):
             description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đi làm việc đi, đừng phiền tôi nữa."
         )
         await ctx.send(embed=embed)
+
+    @commands.hybrid_command(name="synctree", description="[Admin Only] Đồng bộ slash commands lên Discord")
+    @commands.has_permissions(administrator=True)
+    async def sync_tree(self, ctx):
+        """Đồng bộ command tree lên Discord - chỉ dành cho admin"""
+        await ctx.defer()  # Defer vì sync có thể mất thời gian
+        try:
+            synced = await self.bot.tree.sync()
+            embed = create_ellen_embed(
+                title="✅ Tree Sync Hoàn Tất",
+                description=f"Đã đồng bộ **{len(synced)}** slash commands lên Discord.\n\nSlash commands sẽ xuất hiện sau vài giây."
+            )
+            await ctx.send(embed=embed)
+        except Exception as e:
+            embed = create_ellen_embed(
+                title="❌ Lỗi Sync Tree",
+                description=f"Không thể đồng bộ: {str(e)}"
+            )
+            await ctx.send(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(Admin(bot))

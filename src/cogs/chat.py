@@ -40,7 +40,8 @@ class Chat(commands.Cog):
                 system_instruction=SYSTEM_INSTRUCTION
             )
 
-    @commands.command(name="chat")
+    @commands.hybrid_command(name="chat", description="Trò chuyện với Ellen Joe")
+    @app_commands.describe(message="Nội dung tin nhắn muốn nói với Ellen")
     async def chat_with_ellen(self, ctx, *, message: str = None):
         """Trò chuyện với Ellen Joe: .chat <nội dung>"""
         

@@ -7,7 +7,7 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="help")
+    @commands.hybrid_command(name="help", description="Hiển thị danh sách lệnh và hướng dẫn sử dụng bot")
     async def help_command(self, ctx):
         """Hiển thị danh sách lệnh của Ellen: .help"""
         
