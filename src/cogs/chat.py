@@ -42,8 +42,6 @@ class Chat(commands.Cog):
     @commands.hybrid_command(name="chat", description="Trò chuyện với Ellen Joe")
     @app_commands.describe(message="Nội dung tin nhắn muốn nói với Ellen")
     async def chat_with_ellen(self, ctx, *, message: str = None):
-        """Trò chuyện với Ellen Joe: .chat <nội dung>"""
-        
         if not message:
             embed = create_ellen_embed(
                 description="Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy."

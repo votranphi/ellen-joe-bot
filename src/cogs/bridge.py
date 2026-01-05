@@ -89,8 +89,6 @@ class TelegramBridge(commands.Cog):
     @app_commands.describe(limit="Số lượng tin nhắn muốn lấy (mặc định: 5)")
     @commands.has_permissions(administrator=True)
     async def sync_history(self, ctx, limit: int = 5):
-        """Đồng bộ tin nhắn cũ: .sync 5"""
-        
         try:
             await ctx.message.delete()
         except:

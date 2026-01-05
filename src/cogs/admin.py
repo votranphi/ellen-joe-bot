@@ -14,7 +14,6 @@ class Admin(commands.Cog):
     @app_commands.describe(amount="Số lượng tin nhắn cần xóa")
     @commands.has_permissions(manage_messages=True)
     async def clean_messages(self, ctx, amount: int):
-        """Dọn dẹp tin nhắn: .clean 10"""
         await ctx.channel.purge(limit=amount + 1)
         msg = await ctx.send(f"🧹 Đã dọn {amount} tin nhắn.")
         await msg.delete(delay=3)
@@ -23,7 +22,6 @@ class Admin(commands.Cog):
     @app_commands.describe(source_key="Mã nguồn (nens, hiragara, seele)")
     @commands.has_permissions(administrator=True)
     async def setup_channel(self, ctx, source_key: str = None):
-        """Setup kênh hiện tại nhận tin từ nguồn nào: .setup nens"""
         if not source_key:
             sources = ", ".join([f"`{k}`" for k in TELEGRAM_SOURCES.keys()])
             await ctx.send(f"⚠️ Vui lòng chọn nguồn. Các nguồn hiện có: {sources}")
@@ -51,8 +49,6 @@ class Admin(commands.Cog):
     @commands.hybrid_command(name="remove", aliases=['stop', 'unsubscribe'], description="[Admin] Hủy nhận tin tự động ở kênh hiện tại")
     @commands.has_permissions(administrator=True)
     async def remove_channel(self, ctx):
-        """Hủy nhận tin ở kênh hiện tại: .remove"""
-        
         is_deleted = await db.remove_mapping(ctx.channel.id)
         
         if is_deleted:
@@ -67,7 +63,6 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command(name="ping", description="Kiểm tra độ trễ kết nối của bot")
     async def ping(self, ctx):
-        """Kiểm tra bot còn sống không: .ping"""
         latency = round(self.bot.latency * 1000)
         
         # Tạo Embed
@@ -88,8 +83,6 @@ class Admin(commands.Cog):
     )
     @commands.has_permissions(administrator=True)
     async def say_embed(self, ctx, content: str, title: str = None, image: str = None, thumbnail: str = None, color: str = None):
-        """Chuyển tin nhắn thành Embed: .say "Nội dung" title="Tiêu đề" ..."""
-        
         embed_color = 0xD7342A
         if color:
             try:
@@ -118,7 +111,6 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command(name="version", aliases=['v'], description="Hiển thị phiên bản hiện tại của bot")
     async def version(self, ctx):
-        """Kiểm tra phiên bản bot: .version hoặc .v"""
         embed = create_ellen_embed(
             title="📋 Phiên bản hệ thống",
             description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đi làm việc đi, đừng phiền tôi nữa."
@@ -128,7 +120,6 @@ class Admin(commands.Cog):
     @commands.hybrid_command(name="synctree", description="[Admin] Đồng bộ slash commands lên Discord")
     @commands.has_permissions(administrator=True)
     async def sync_tree(self, ctx):
-        """Đồng bộ command tree lên Discord - chỉ dành cho admin"""
         await ctx.defer()
         try:
             synced = await self.bot.tree.sync()

@@ -8,18 +8,6 @@ MAX_FILE_SIZE_MB = 24
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024 
 
 def create_ellen_embed(title=None, description=None, color=0xD7342A, footer_text="Victoria Housekeeping Co."):
-    """
-    Create a standardized Discord Embed for Ellen Joe.
-    
-    Args:
-        title (str, optional): The embed title
-        description (str, optional): The embed description
-        color (int, optional): The embed color. Defaults to 0xD7342A (Ellen's red)
-        footer_text (str, optional): The footer text. Defaults to "Victoria Housekeeping Co."
-    
-    Returns:
-        discord.Embed: A configured embed with Ellen's branding
-    """
     if title and description:
         embed = discord.Embed(title=title, description=description, color=color)
     elif title:
