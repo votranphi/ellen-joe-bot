@@ -7,7 +7,7 @@ TEMP_DIR = 'temp_media'
 MAX_FILE_SIZE_MB = 24 
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024 
 
-def create_ellen_embed(
+def create_custom_embed(
     description: str,
     title: str = None, 
     color: int = 0xD7342A, 

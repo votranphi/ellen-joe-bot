@@ -3,7 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 from src.database import db
 from src.config import TELEGRAM_SOURCES
-from src.utils import create_ellen_embed
+from src.utils import create_custom_embed
 from src.version import __version__
 
 class Admin(commands.Cog):
@@ -38,7 +38,7 @@ class Admin(commands.Cog):
 
         await db.set_mapping(ctx.channel.id, source_key, source_info['tele_id'])
         
-        embed = create_ellen_embed(
+        embed = create_custom_embed(
             title="✅ Setup Thành Công",
             description=f"Kênh này sẽ nhận tin từ: **{source_info['name']}**",
             color=0x00ff00,
@@ -52,7 +52,7 @@ class Admin(commands.Cog):
         is_deleted = await db.remove_mapping(ctx.channel.id)
         
         if is_deleted:
-            embed = create_ellen_embed(
+            embed = create_custom_embed(
                 title="✅ Đã hủy đăng ký",
                 description="Kênh này sẽ **không còn nhận tin nhắn** tự động nữa.",
                 color=0xff0000 # Màu đỏ
@@ -65,7 +65,7 @@ class Admin(commands.Cog):
     async def ping(self, ctx):
         latency = round(self.bot.latency * 1000)
         
-        embed = create_ellen_embed(
+        embed = create_custom_embed(
             description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭",
             title="🦈 Shark Ping"
         )
@@ -89,7 +89,7 @@ class Admin(commands.Cog):
             except ValueError:
                 pass
 
-        embed = create_ellen_embed(
+        embed = create_custom_embed(
             description=content,
             title=title, 
             color=embed_color,
@@ -105,7 +105,7 @@ class Admin(commands.Cog):
         if thumbnail:
             kwargs["thumbnail"] = thumbnail
             
-        embed = create_ellen_embed(**kwargs)
+        embed = create_custom_embed(**kwargs)
 
 
         try:
@@ -117,7 +117,7 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command(name="version", aliases=['v'], description="Hiển thị phiên bản hiện tại của bot")
     async def version(self, ctx):
-        embed = create_ellen_embed(
+        embed = create_custom_embed(
             description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đi làm việc đi, đừng phiền tôi nữa.",
             title="📋 Phiên bản hệ thống"
         )
@@ -129,13 +129,13 @@ class Admin(commands.Cog):
         await ctx.defer()
         try:
             synced = await self.bot.tree.sync()
-            embed = create_ellen_embed(
+            embed = create_custom_embed(
                 description=f"Đã đồng bộ **{len(synced)}** slash commands lên Discord.\n\nSlash commands sẽ xuất hiện sau vài giây.",
                 title="✅ Tree Sync Hoàn Tất"
             )
             await ctx.send(embed=embed)
         except Exception as e:
-            embed = create_ellen_embed(
+            embed = create_custom_embed(
                 description=f"Không thể đồng bộ: {str(e)}",
                 title="❌ Lỗi Sync Tree"
             )
