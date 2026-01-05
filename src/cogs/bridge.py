@@ -120,7 +120,7 @@ class TelegramBridge(commands.Cog):
 
         for msg in reversed(messages):
             await self.forward_to_discord(msg, [ctx.channel.id])
-            await asyncio.sleep(1.5) # Delay để tránh rate limit
+            await asyncio.sleep(1.5)
 
         await status_msg.edit(content="✅ Đồng bộ hoàn tất!")
         await status_msg.delete(delay=3)

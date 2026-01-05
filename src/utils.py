@@ -22,12 +22,6 @@ def create_custom_embed(
     footer_icon: str = None,
     fields: list = None
 ):
-    """
-    Hàm tạo Embed toàn năng cho Ellen Joe Bot.
-    Yêu cầu bắt buộc phải có description.
-    """
-    
-    # Khởi tạo Embed cơ bản
     embed = discord.Embed(
         title=title, 
         description=description, 
@@ -36,28 +30,23 @@ def create_custom_embed(
         timestamp=timestamp
     )
     
-    # Setup Author
     embed.set_author(
         name=author_name, 
         icon_url=author_icon, 
         url=author_url if author_url else None
     )
     
-    # Setup Thumbnail
     if thumbnail:
         embed.set_thumbnail(url=thumbnail)
     
-    # Setup Image (Ảnh lớn ở dưới)
     if image:
         embed.set_image(url=image)
         
-    # Setup Footer
     embed.set_footer(
         text=footer_text, 
         icon_url=footer_icon if footer_icon else None
     )
     
-    # Setup Fields (Nếu có)
     if fields:
         for field in fields:
             embed.add_field(

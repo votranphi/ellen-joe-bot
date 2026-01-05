@@ -5,6 +5,7 @@ from src.database import db
 from src.config import TELEGRAM_SOURCES
 from src.utils import create_custom_embed
 from src.version import __version__
+from src.config import ELLEN_AVATAR_URL
 
 class Admin(commands.Cog):
     def __init__(self, bot):
@@ -55,7 +56,7 @@ class Admin(commands.Cog):
             embed = create_custom_embed(
                 title="✅ Đã hủy đăng ký",
                 description="Kênh này sẽ **không còn nhận tin nhắn** tự động nữa.",
-                color=0xff0000 # Màu đỏ
+                color=0xff0000
             )
             await ctx.send(embed=embed)
         else:
@@ -67,12 +68,13 @@ class Admin(commands.Cog):
         
         embed = create_custom_embed(
             description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭",
-            title="🦈 Shark Ping"
+            title="🦈 Shark Ping",
+            thumbnail=ELLEN_AVATAR_URL
         )
         
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(name="say", description="[Admin] Gửi tin nhắn dạng Embed (hỗ trợ Markdown & Ảnh)")
+    @commands.hybrid_command(name="say", description="[Admin] Gửi tin nhắn dạng Embed")
     @app_commands.describe(
         content="Nội dung tin nhắn (Markdown)",
         title="Tiêu đề (Optional)",
@@ -119,7 +121,8 @@ class Admin(commands.Cog):
     async def version(self, ctx):
         embed = create_custom_embed(
             description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đi làm việc đi, đừng phiền tôi nữa.",
-            title="📋 Phiên bản hệ thống"
+            title="📋 Phiên bản hệ thống",
+            thumbnail=ELLEN_AVATAR_URL
         )
         await ctx.send(embed=embed)
 

@@ -4,6 +4,7 @@ from discord.ext import commands
 import google.generativeai as genai
 import os
 from src.utils import create_custom_embed
+from src.config import ELLEN_AVATAR_URL
 
 SYSTEM_INSTRUCTION = """
 Bạn là Ellen Joe, một người giúp việc (maid) thuộc Victoria Housekeeping Co. trong game Zenless Zone Zero.
@@ -43,7 +44,10 @@ class Chat(commands.Cog):
     @app_commands.describe(message="Nội dung tin nhắn muốn nói với Ellen")
     async def chat_with_ellen(self, ctx, *, message: str = None):
         if not message:
-            embed = create_custom_embed("Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy.")
+            embed = create_custom_embed(
+                description="Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy.",
+                thumbnail=ELLEN_AVATAR_URL
+            )
             await ctx.send(embed=embed)
             return
 
@@ -52,14 +56,20 @@ class Chat(commands.Cog):
                 response = self.model.generate_content(message)
                 reply_text = response.text
 
-                embed = create_custom_embed(reply_text)
+                embed = create_custom_embed(
+                    description=reply_text,
+                    thumbnail=ELLEN_AVATAR_URL
+                )
                 await ctx.send(embed=embed)
 
             except Exception as e:
                 print(f"Lỗi Gemini: {e}")
                 
                 error_msg = f"Chậc... Mệt quá, đầu óc tôi đang không load được. Hãy cung cấp cho tôi **{e.code}** viên kẹo đi. Tôi sẽ tiếp tục làm việc."
-                embed = create_custom_embed(error_msg)
+                embed = create_custom_embed(
+                    description=error_msg,
+                    thumbnail=ELLEN_AVATAR_URL
+                )
                 
                 await ctx.send(embed=embed)
 
