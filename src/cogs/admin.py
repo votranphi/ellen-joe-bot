@@ -15,7 +15,7 @@ class Admin(commands.Cog):
     @commands.has_permissions(manage_messages=True)
     async def clean_messages(self, ctx, amount: int):
         """Dọn dẹp tin nhắn: .clean 10"""
-        await ctx.channel.purge(limit=amount + 1) # +1 để xóa luôn câu lệnh clean
+        await ctx.channel.purge(limit=amount + 1)
         msg = await ctx.send(f"🧹 Đã dọn {amount} tin nhắn.")
         await msg.delete(delay=3)
 
@@ -38,7 +38,6 @@ class Admin(commands.Cog):
             await ctx.send("❌ Nguồn này chưa được cấu hình ID trong .env")
             return
 
-        # Lưu vào MongoDB
         await db.set_mapping(ctx.channel.id, source_key, source_info['tele_id'])
         
         embed = discord.Embed(
@@ -54,7 +53,6 @@ class Admin(commands.Cog):
     async def remove_channel(self, ctx):
         """Hủy nhận tin ở kênh hiện tại: .remove"""
         
-        # Gọi hàm xóa trong database
         is_deleted = await db.remove_mapping(ctx.channel.id)
         
         if is_deleted:
@@ -70,7 +68,6 @@ class Admin(commands.Cog):
     @commands.hybrid_command(name="ping", description="Kiểm tra độ trễ kết nối của bot")
     async def ping(self, ctx):
         """Kiểm tra bot còn sống không: .ping"""
-        # self.bot.latency trả về giây, nhân 1000 để ra mili giây
         latency = round(self.bot.latency * 1000)
         
         # Tạo Embed
@@ -79,10 +76,44 @@ class Admin(commands.Cog):
             description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭"
         )
         
-        # Note: The footer icon is intentionally not added as the helper uses a standard footer
-        # If you need the bot avatar in footer, you can manually override:
-        # embed.set_footer(text="Victoria Housekeeping Co.", icon_url=self.bot.user.avatar.url if self.bot.user.avatar else None)
+        await ctx.send(embed=embed)
+
+    @commands.hybrid_command(name="say", description="[Admin] Gửi tin nhắn dạng Embed (hỗ trợ Markdown & Ảnh)")
+    @app_commands.describe(
+        content="Nội dung tin nhắn (Markdown)",
+        title="Tiêu đề (Optional)",
+        image="Link ảnh lớn nằm dưới (Optional)",
+        thumbnail="Link ảnh nhỏ góc phải (Optional - Ghi đè ảnh Ellen)",
+        color="Mã màu Hex, ví dụ: 00FF00 (Optional)"
+    )
+    @commands.has_permissions(administrator=True)
+    async def say_embed(self, ctx, content: str, title: str = None, image: str = None, thumbnail: str = None, color: str = None):
+        """Chuyển tin nhắn thành Embed: .say "Nội dung" title="Tiêu đề" ..."""
         
+        embed_color = 0xD7342A
+        if color:
+            try:
+                embed_color = int(color.replace("#", ""), 16)
+            except ValueError:
+                pass
+
+        embed = create_ellen_embed(
+            title=title, 
+            description=content, 
+            color=embed_color
+        )
+
+        if image:
+            embed.set_image(url=image)
+        
+        if thumbnail:
+            embed.set_thumbnail(url=thumbnail)
+
+        try:
+            await ctx.message.delete()
+        except:
+            pass
+
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(name="version", aliases=['v'], description="Hiển thị phiên bản hiện tại của bot")
@@ -98,7 +129,7 @@ class Admin(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def sync_tree(self, ctx):
         """Đồng bộ command tree lên Discord - chỉ dành cho admin"""
-        await ctx.defer()  # Defer vì sync có thể mất thời gian
+        await ctx.defer()
         try:
             synced = await self.bot.tree.sync()
             embed = create_ellen_embed(
