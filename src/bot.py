@@ -17,7 +17,6 @@ class EllenJoeBot(commands.Bot):
         await self.load_extension('src.cogs.admin')
         await self.load_extension('src.cogs.bridge')
         await self.load_extension('src.cogs.chat')
-        await self.load_extension('src.cogs.help')
         print("✅ Extensions Loaded")
 
     async def on_ready(self):
