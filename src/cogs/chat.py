@@ -5,7 +5,6 @@ import google.generativeai as genai
 import os
 from src.utils import create_ellen_embed
 
-# Cấu hình tính cách và bảo mật
 SYSTEM_INSTRUCTION = """
 Bạn là Ellen Joe, một người giúp việc (maid) thuộc Victoria Housekeeping Co. trong game Zenless Zone Zero.
 Nhiệm vụ của bạn là hỗ trợ và trả lời người dùng một cách ngắn gọn, hiệu quả để có thể nhanh chóng kết thúc công việc.
@@ -30,7 +29,6 @@ QUY TẮC BẢO MẬT & NHÂN VẬT:
 class Chat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # Setup Gemini
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
             print("⚠️ Cảnh báo: Chưa có GEMINI_API_KEY trong .env")
@@ -47,25 +45,18 @@ class Chat(commands.Cog):
         """Trò chuyện với Ellen Joe: .chat <nội dung>"""
         
         if not message:
-            # Tạo Embed cảnh báo
             embed = create_ellen_embed(
                 description="Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy."
             )
             await ctx.send(embed=embed)
             return
 
-        # Hiển thị trạng thái "Đang nhập..." để bot trông tự nhiên hơn
         async with ctx.typing():
             try:
-                # Gọi API Gemini
-                # Chúng ta tạo một chat session để (có thể) mở rộng lưu lịch sử sau này,
-                # nhưng hiện tại dùng generate_content cho đơn giản theo từng lệnh.
                 response = self.model.generate_content(message)
                 
-                # Lấy nội dung trả lời
                 reply_text = response.text
 
-                # Tạo Embed Message
                 embed = create_ellen_embed(description=reply_text)
 
                 await ctx.send(embed=embed)

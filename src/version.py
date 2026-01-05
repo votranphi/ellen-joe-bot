@@ -1,6 +1,1 @@
-"""
-Version information for Ellen Joe Bot.
-Update this file when deploying new versions.
-"""
-
-__version__ = "2.1.0"
+__version__ = "2.1.1"

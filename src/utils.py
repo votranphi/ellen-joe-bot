@@ -20,7 +20,6 @@ def create_ellen_embed(title=None, description=None, color=0xD7342A, footer_text
     Returns:
         discord.Embed: A configured embed with Ellen's branding
     """
-    # Create embed with optional title and description
     if title and description:
         embed = discord.Embed(title=title, description=description, color=color)
     elif title:
@@ -30,13 +29,10 @@ def create_ellen_embed(title=None, description=None, color=0xD7342A, footer_text
     else:
         embed = discord.Embed(color=color)
     
-    # Set Ellen's author info
     embed.set_author(name="Ellen Joe", icon_url=ELLEN_AVATAR_URL)
     
-    # Set Ellen's thumbnail
     embed.set_thumbnail(url=ELLEN_AVATAR_URL)
     
-    # Set footer
     embed.set_footer(text=footer_text)
     
     return embed

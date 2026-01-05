@@ -12,28 +12,22 @@ from src.utils import format_discord_message, TEMP_DIR, MAX_FILE_SIZE_BYTES, MAX
 class TelegramBridge(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # Khởi tạo Telethon Client
         self.api_id = os.getenv('TELE_API_ID')
         self.api_hash = os.getenv('TELE_API_HASH')
         self.t_client = TelegramClient('session_bot_v2', self.api_id, self.api_hash)
         
     async def cog_load(self):
-        # Khởi động Telethon khi Cog load
         await self.t_client.start()
         print("🔵 Telethon Client Started")
         
-        # Đăng ký sự kiện lắng nghe tin mới (Live Listener)
         self.t_client.add_event_handler(self.on_tele_message, events.NewMessage())
 
     async def cog_unload(self):
         await self.t_client.disconnect()
 
-    # --- HÀM XỬ LÝ CHUNG: GỬI 1 TIN SANG DISCORD ---
     async def forward_to_discord(self, message, discord_channel_ids):
-        # Xử lý text
         formatted_text = format_discord_message(message)
         
-        # Xử lý media
         file_path = None
         display_text = formatted_text
         
@@ -54,14 +48,10 @@ class TelegramBridge(commands.Cog):
                 except Exception as e:
                     print(f"Lỗi tải media: {e}")
 
-        # Gửi sang các kênh Discord đích
         for d_id in discord_channel_ids:
             channel = self.bot.get_channel(d_id)
             if not channel: continue
             
-            # Lấy info nguồn để set Author/Icon (Cần query ngược lại từ DB hoặc truyền vào)
-            # Ở đây ta lấy tạm thông tin từ message gốc hoặc config global nếu có thể
-            # Để đơn giản, ta sẽ lấy info từ mapping DB (nếu cần tối ưu có thể cache)
             source_key = await db.get_source_by_discord_id(d_id)
             source_info = TELEGRAM_SOURCES.get(source_key, {})
             
@@ -83,42 +73,34 @@ class TelegramBridge(commands.Cog):
             finally:
                 if discord_file: discord_file.close()
 
-        # Cleanup file
         if file_path:
             try: os.remove(file_path)
             except: pass
 
-    # --- 1. LIVE LISTENER (Tự động) ---
     async def on_tele_message(self, event):
         chat_id = event.chat_id
-        # Tìm xem Telegram ID này có được map với kênh Discord nào không
         dest_discord_ids = await db.get_discord_channels_by_tele_id(chat_id)
         
         if dest_discord_ids:
             print(f"📩 Live Sync: Tin nhắn từ {chat_id} -> {dest_discord_ids}")
             await self.forward_to_discord(event.message, dest_discord_ids)
 
-    # --- 2. COMMAND SYNC (Thủ công) ---
     @commands.hybrid_command(name="sync", description="[Admin] Đồng bộ tin nhắn cũ từ Telegram sang Discord")
     @app_commands.describe(limit="Số lượng tin nhắn muốn lấy (mặc định: 5)")
     @commands.has_permissions(administrator=True)
     async def sync_history(self, ctx, limit: int = 5):
         """Đồng bộ tin nhắn cũ: .sync 5"""
         
-        # 1. Xóa tin nhắn lệnh của người dùng (.sync) để dọn dẹp ngay từ đầu
         try:
             await ctx.message.delete()
         except:
-            pass # Bỏ qua nếu bot không có quyền xóa tin nhắn người khác
+            pass
 
-        # 2. Gửi tin nhắn trạng thái ban đầu và lưu vào biến status_msg
         status_msg = await ctx.send(f"⏳ Đang đồng bộ {limit} tin nhắn gần nhất...")
         
-        # 3. Xác định kênh hiện tại đang map với nguồn nào
         source_key = await db.get_source_by_discord_id(ctx.channel.id)
         
         if not source_key:
-            # Sửa nội dung tin nhắn thông báo và xóa sau 5s
             await status_msg.edit(content="❌ Kênh này chưa được setup. Dùng lệnh `.setup <source>` trước.")
             await status_msg.delete(delay=5)
             return
@@ -126,7 +108,6 @@ class TelegramBridge(commands.Cog):
         source_info = TELEGRAM_SOURCES.get(source_key)
         tele_id = source_info['tele_id']
         
-        # 4. Lấy tin nhắn từ Telegram
         try:
             messages = await self.t_client.get_messages(tele_id, limit=limit)
         except Exception as e:
@@ -139,12 +120,10 @@ class TelegramBridge(commands.Cog):
             await status_msg.delete(delay=5)
             return
 
-        # 5. Gửi tin (Dùng lại hàm forward_to_discord nhưng chỉ cho kênh hiện tại)
         for msg in reversed(messages):
             await self.forward_to_discord(msg, [ctx.channel.id])
             await asyncio.sleep(1.5) # Delay để tránh rate limit
 
-        # 6. Thông báo hoàn tất và tự xóa sau 3 giây
         await status_msg.edit(content="✅ Đồng bộ hoàn tất!")
         await status_msg.delete(delay=3)
 
