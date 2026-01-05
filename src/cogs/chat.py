@@ -43,28 +43,23 @@ class Chat(commands.Cog):
     @app_commands.describe(message="Nội dung tin nhắn muốn nói với Ellen")
     async def chat_with_ellen(self, ctx, *, message: str = None):
         if not message:
-            embed = create_ellen_embed(
-                description="Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy."
-            )
+            embed = create_ellen_embed("Gì? Gọi ta mà không nói gì à? Phiền phức thật đấy.")
             await ctx.send(embed=embed)
             return
 
         async with ctx.typing():
             try:
                 response = self.model.generate_content(message)
-                
                 reply_text = response.text
 
-                embed = create_ellen_embed(description=reply_text)
-
+                embed = create_ellen_embed(reply_text)
                 await ctx.send(embed=embed)
 
             except Exception as e:
                 print(f"Lỗi Gemini: {e}")
                 
-                embed = create_ellen_embed(
-                    description=f"Chậc... Mệt quá, đầu óc tôi đang không load được. Hãy cung cấp cho tôi **{e.code}** viên kẹo đi. Tôi sẽ tiếp tục làm việc."
-                )
+                error_msg = f"Chậc... Mệt quá, đầu óc tôi đang không load được. Hãy cung cấp cho tôi **{e.code}** viên kẹo đi. Tôi sẽ tiếp tục làm việc."
+                embed = create_ellen_embed(error_msg)
                 
                 await ctx.send(embed=embed)
 

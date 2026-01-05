@@ -7,21 +7,64 @@ TEMP_DIR = 'temp_media'
 MAX_FILE_SIZE_MB = 24 
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024 
 
-def create_ellen_embed(title=None, description=None, color=0xD7342A, footer_text="Victoria Housekeeping Co."):
-    if title and description:
-        embed = discord.Embed(title=title, description=description, color=color)
-    elif title:
-        embed = discord.Embed(title=title, color=color)
-    elif description:
-        embed = discord.Embed(description=description, color=color)
-    else:
-        embed = discord.Embed(color=color)
+def create_ellen_embed(
+    description: str,
+    title: str = None, 
+    color: int = 0xD7342A, 
+    url: str = None,
+    timestamp = None,
+    image: str = None,
+    thumbnail: str = None,
+    author_name: str = "Ellen Joe", 
+    author_icon: str = ELLEN_AVATAR_URL,
+    author_url: str = None,
+    footer_text: str = "Victoria Housekeeping Co.",
+    footer_icon: str = None,
+    fields: list = None
+):
+    """
+    Hàm tạo Embed toàn năng cho Ellen Joe Bot.
+    Yêu cầu bắt buộc phải có description.
+    """
     
-    embed.set_author(name="Ellen Joe", icon_url=ELLEN_AVATAR_URL)
+    # Khởi tạo Embed cơ bản
+    embed = discord.Embed(
+        title=title, 
+        description=description, 
+        color=color, 
+        url=url, 
+        timestamp=timestamp
+    )
     
-    embed.set_thumbnail(url=ELLEN_AVATAR_URL)
+    # Setup Author
+    embed.set_author(
+        name=author_name, 
+        icon_url=author_icon, 
+        url=author_url if author_url else discord.Embed.Empty
+    )
     
-    embed.set_footer(text=footer_text)
+    # Setup Thumbnail
+    if thumbnail:
+        embed.set_thumbnail(url=thumbnail)
+    
+    # Setup Image (Ảnh lớn ở dưới)
+    if image:
+        embed.set_image(url=image)
+        
+    # Setup Footer
+    embed.set_footer(
+        text=footer_text, 
+        icon_url=footer_icon if footer_icon else discord.Embed.Empty
+    )
+    
+    # Setup Fields (Nếu có)
+    if fields:
+        for field in fields:
+            embed.add_field(
+                name=field.get('name', 'No Title'),
+                value=field.get('value', 'No Content'),
+                inline=field.get('inline', False)
+            )
     
     return embed
 

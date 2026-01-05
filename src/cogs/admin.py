@@ -38,12 +38,12 @@ class Admin(commands.Cog):
 
         await db.set_mapping(ctx.channel.id, source_key, source_info['tele_id'])
         
-        embed = discord.Embed(
+        embed = create_ellen_embed(
             title="✅ Setup Thành Công",
             description=f"Kênh này sẽ nhận tin từ: **{source_info['name']}**",
-            color=0x00ff00
+            color=0x00ff00,
+            thumbnail=source_info['icon_url']
         )
-        embed.set_thumbnail(url=source_info['icon_url'])
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(name="remove", aliases=['stop', 'unsubscribe'], description="[Admin] Hủy nhận tin tự động ở kênh hiện tại")
@@ -52,7 +52,7 @@ class Admin(commands.Cog):
         is_deleted = await db.remove_mapping(ctx.channel.id)
         
         if is_deleted:
-            embed = discord.Embed(
+            embed = create_ellen_embed(
                 title="✅ Đã hủy đăng ký",
                 description="Kênh này sẽ **không còn nhận tin nhắn** tự động nữa.",
                 color=0xff0000 # Màu đỏ
@@ -65,10 +65,9 @@ class Admin(commands.Cog):
     async def ping(self, ctx):
         latency = round(self.bot.latency * 1000)
         
-        # Tạo Embed
         embed = create_ellen_embed(
-            title="🦈 Shark Ping",
-            description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭"
+            description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭",
+            title="🦈 Shark Ping"
         )
         
         await ctx.send(embed=embed)
@@ -78,7 +77,7 @@ class Admin(commands.Cog):
         content="Nội dung tin nhắn (Markdown)",
         title="Tiêu đề (Optional)",
         image="Link ảnh lớn nằm dưới (Optional)",
-        thumbnail="Link ảnh nhỏ góc phải (Optional - Ghi đè ảnh Ellen)",
+        thumbnail="Link ảnh nhỏ góc phải (Optional)",
         color="Mã màu Hex, ví dụ: 00FF00 (Optional)"
     )
     @commands.has_permissions(administrator=True)
@@ -91,16 +90,23 @@ class Admin(commands.Cog):
                 pass
 
         embed = create_ellen_embed(
+            description=content,
             title=title, 
-            description=content, 
-            color=embed_color
+            color=embed_color,
+            image=image,
+            thumbnail=thumbnail
         )
-
-        if image:
-            embed.set_image(url=image)
-        
+        kwargs = {
+            "description": content,
+            "title": title,
+            "color": embed_color,
+            "image": image
+        }
         if thumbnail:
-            embed.set_thumbnail(url=thumbnail)
+            kwargs["thumbnail"] = thumbnail
+            
+        embed = create_ellen_embed(**kwargs)
+
 
         try:
             await ctx.message.delete()
@@ -112,8 +118,8 @@ class Admin(commands.Cog):
     @commands.hybrid_command(name="version", aliases=['v'], description="Hiển thị phiên bản hiện tại của bot")
     async def version(self, ctx):
         embed = create_ellen_embed(
-            title="📋 Phiên bản hệ thống",
-            description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đi làm việc đi, đừng phiền tôi nữa."
+            description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đi làm việc đi, đừng phiền tôi nữa.",
+            title="📋 Phiên bản hệ thống"
         )
         await ctx.send(embed=embed)
 
@@ -124,14 +130,14 @@ class Admin(commands.Cog):
         try:
             synced = await self.bot.tree.sync()
             embed = create_ellen_embed(
-                title="✅ Tree Sync Hoàn Tất",
-                description=f"Đã đồng bộ **{len(synced)}** slash commands lên Discord.\n\nSlash commands sẽ xuất hiện sau vài giây."
+                description=f"Đã đồng bộ **{len(synced)}** slash commands lên Discord.\n\nSlash commands sẽ xuất hiện sau vài giây.",
+                title="✅ Tree Sync Hoàn Tất"
             )
             await ctx.send(embed=embed)
         except Exception as e:
             embed = create_ellen_embed(
-                title="❌ Lỗi Sync Tree",
-                description=f"Không thể đồng bộ: {str(e)}"
+                description=f"Không thể đồng bộ: {str(e)}",
+                title="❌ Lỗi Sync Tree"
             )
             await ctx.send(embed=embed)
 
