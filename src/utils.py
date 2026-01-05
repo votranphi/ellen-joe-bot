@@ -40,7 +40,7 @@ def create_ellen_embed(
     embed.set_author(
         name=author_name, 
         icon_url=author_icon, 
-        url=author_url if author_url else discord.Embed.Empty
+        url=author_url if author_url else None
     )
     
     # Setup Thumbnail
@@ -54,7 +54,7 @@ def create_ellen_embed(
     # Setup Footer
     embed.set_footer(
         text=footer_text, 
-        icon_url=footer_icon if footer_icon else discord.Embed.Empty
+        icon_url=footer_icon if footer_icon else None
     )
     
     # Setup Fields (Nếu có)
