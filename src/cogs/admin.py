@@ -15,9 +15,13 @@ class Admin(commands.Cog):
     @app_commands.describe(amount="Số lượng tin nhắn cần xóa")
     @commands.has_permissions(manage_messages=True)
     async def clean_messages(self, ctx, amount: int):
-        await ctx.channel.purge(limit=amount + 1)
-        msg = await ctx.send(f"🧹 Đã dọn {amount} tin nhắn.")
-        await msg.delete(delay=3)
+        await ctx.defer(ephemeral=True)
+        if ctx.interaction:
+            limit = amount
+        else:
+            limit = amount + 1
+        await ctx.channel.purge(limit=limit)
+        await ctx.send(f"🧹 Đã dọn {amount} tin nhắn.", delete_after=3)
 
     @commands.hybrid_command(name="setup", description="[Admin] Cấu hình kênh này nhận tin từ nguồn Telegram")
     @app_commands.describe(source_key="Mã nguồn (nens, hiragara, seele)")
