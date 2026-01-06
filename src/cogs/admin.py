@@ -4,24 +4,11 @@ from discord.ext import commands
 from src.database import db
 from src.config import TELEGRAM_SOURCES
 from src.utils import create_custom_embed
-from src.version import __version__
 from src.config import ELLEN_AVATAR_URL
 
 class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.hybrid_command(name="clean", description="[Manage Messages] Dọn dẹp tin nhắn trong kênh")
-    @app_commands.describe(amount="Số lượng tin nhắn cần xóa")
-    @commands.has_permissions(manage_messages=True)
-    async def clean_messages(self, ctx, amount: int):
-        await ctx.defer(ephemeral=True)
-        if ctx.interaction:
-            limit = amount
-        else:
-            limit = amount + 1
-        await ctx.channel.purge(limit=limit)
-        await ctx.send(f"🧹 Đã dọn {amount} tin nhắn.", delete_after=3)
 
     @commands.hybrid_command(name="setup", description="[Admin] Cấu hình kênh này nhận tin từ nguồn Telegram")
     @app_commands.describe(source_key="Mã nguồn (nens, hiragara, seele)")
@@ -66,18 +53,6 @@ class Admin(commands.Cog):
         else:
             await ctx.send("⚠️ Kênh này chưa được setup nguồn nào cả.")
 
-    @commands.hybrid_command(name="ping", description="Kiểm tra độ trễ kết nối của bot")
-    async def ping(self, ctx):
-        latency = round(self.bot.latency * 1000)
-        
-        embed = create_custom_embed(
-            description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭",
-            title="🦈 Shark Ping",
-            thumbnail=ELLEN_AVATAR_URL
-        )
-        
-        await ctx.send(embed=embed)
-
     @commands.hybrid_command(name="say", description="[Admin] Gửi tin nhắn dạng Embed")
     @app_commands.describe(
         content="Nội dung tin nhắn (Markdown)",
@@ -95,39 +70,21 @@ class Admin(commands.Cog):
             except ValueError:
                 pass
 
-        embed = create_custom_embed(
-            description=content,
-            title=title, 
-            color=embed_color,
-            image=image,
-            thumbnail=thumbnail
-        )
         kwargs = {
             "description": content,
             "title": title,
             "color": embed_color,
-            "image": image
+            "image": image,
+            "thumbnail": thumbnail
         }
-        if thumbnail:
-            kwargs["thumbnail"] = thumbnail
             
         embed = create_custom_embed(**kwargs)
-
 
         try:
             await ctx.message.delete()
         except:
             pass
 
-        await ctx.send(embed=embed)
-
-    @commands.hybrid_command(name="version", aliases=['v'], description="Hiển thị phiên bản hiện tại của bot")
-    async def version(self, ctx):
-        embed = create_custom_embed(
-            description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đi làm việc đi, đừng phiền tôi nữa.",
-            title="📋 Phiên bản hệ thống",
-            thumbnail=ELLEN_AVATAR_URL
-        )
         await ctx.send(embed=embed)
 
     @commands.hybrid_command(name="synctree", description="[Admin] Đồng bộ slash commands lên Discord")
