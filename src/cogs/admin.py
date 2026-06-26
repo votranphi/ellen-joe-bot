@@ -1,10 +1,8 @@
-import discord
 from discord import app_commands
 from discord.ext import commands
 from src.database import db
 from src.config import TELEGRAM_SOURCES
 from src.utils import create_custom_embed
-from src.config import ELLEN_AVATAR_URL
 
 class Admin(commands.Cog):
     def __init__(self, bot):

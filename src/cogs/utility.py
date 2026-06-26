@@ -1,5 +1,3 @@
-import discord
-from discord import app_commands
 from discord.ext import commands
 from src.utils import create_custom_embed
 from src.version import __version__

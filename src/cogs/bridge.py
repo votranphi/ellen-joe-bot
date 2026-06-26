@@ -4,7 +4,6 @@ from discord.ext import commands
 from telethon import TelegramClient, events
 import os
 import asyncio
-import shutil
 from src.config import TELEGRAM_SOURCES
 from src.database import db
 from src.utils import format_discord_message, TEMP_DIR, MAX_FILE_SIZE_BYTES, MAX_FILE_SIZE_MB

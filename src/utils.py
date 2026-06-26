@@ -1,4 +1,3 @@
-import os
 import discord
 from telethon.tl.types import MessageEntityTextUrl, MessageEntityBold, MessageEntityItalic, MessageEntityCode
 from src.config import ELLEN_AVATAR_URL
