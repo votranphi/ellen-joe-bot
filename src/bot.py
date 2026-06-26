@@ -3,6 +3,7 @@ from discord.ext import commands
 import os
 import asyncio
 from dotenv import load_dotenv
+from src.version import __version__
 
 load_dotenv()
 
@@ -24,6 +25,10 @@ class EllenJoeBot(commands.Bot):
 
     async def on_ready(self):
         print(f'Logged in as {self.user}')
+
+        activity = discord.CustomActivity(name=f"v{__version__}")
+        await self.change_presence(activity=activity)
+        print(f"✅ Đã set status thành: v{__version__}")
 
 bot = EllenJoeBot()
 
