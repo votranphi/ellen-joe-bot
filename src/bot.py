@@ -28,7 +28,7 @@ class EllenJoeBot(commands.Bot):
 
         activity = discord.CustomActivity(name=f"v{__version__}")
         await self.change_presence(activity=activity)
-        print(f"✅ Đã set status thành: v{__version__}")
+        print(f"✅ Status updated: v{__version__}")
 
 bot = EllenJoeBot()
 
