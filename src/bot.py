@@ -16,7 +16,6 @@ class EllenJoeBot(commands.Bot):
     async def setup_hook(self):
         await self.load_extension('src.cogs.admin')
         await self.load_extension('src.cogs.bridge')
-        await self.load_extension('src.cogs.chat')
         await self.load_extension('src.cogs.utility')
         await self.load_extension('src.cogs.moderation')
         
