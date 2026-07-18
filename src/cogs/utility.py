@@ -75,9 +75,7 @@ class Utility(commands.Cog):
             title=f":pregnant_man: Bel Check: {ctx.author.name}",
             description=f"## Mức độ bel: {bel_percent:.2f}%\n{icon} {comment}",
             color=secrets.randbelow(0x1000000),
-            footer_text="💫 Đạt 100% để nhận role Bel Vương",
-            author_name=None,
-            author_icon=None
+            footer_text="💫 Đạt 100% để nhận role Bel Vương"
         )
 
         await self._sync_bel_role(ctx, bel_percent)

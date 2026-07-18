@@ -9,31 +9,36 @@ MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 def create_custom_embed(
     description: str,
     title: str = None, 
-    color: int = 0xD7342A, 
+    color: int = None, 
     url: str = None,
     timestamp = None,
     image: str = None,
     thumbnail: str = None,
-    author_name: str = "Ellen Joe", 
-    author_icon: str = ELLEN_AVATAR_URL,
+    author_name: str = None, 
+    author_icon: str = None,
     author_url: str = None,
-    footer_text: str = "Victoria Housekeeping Co.",
+    footer_text: str = None,
     footer_icon: str = None,
     fields: list = None
 ):
-    embed = discord.Embed(
-        title=title, 
-        description=description, 
-        color=color, 
-        url=url, 
-        timestamp=timestamp
-    )
-    
-    embed.set_author(
-        name=author_name, 
-        icon_url=author_icon, 
-        url=author_url if author_url else None
-    )
+    embed_kwargs = {
+        "title": title,
+        "description": description,
+        "url": url,
+        "timestamp": timestamp,
+    }
+
+    if color is not None:
+        embed_kwargs["color"] = color
+
+    embed = discord.Embed(**embed_kwargs)
+
+    if author_name is not None or author_icon is not None or author_url is not None:
+        embed.set_author(
+            name=author_name or "\u200b",
+            icon_url=author_icon,
+            url=author_url if author_url else None
+        )
     
     if thumbnail:
         embed.set_thumbnail(url=thumbnail)
@@ -41,10 +46,11 @@ def create_custom_embed(
     if image:
         embed.set_image(url=image)
         
-    embed.set_footer(
-        text=footer_text, 
-        icon_url=footer_icon if footer_icon else None
-    )
+    if footer_text is not None or footer_icon is not None:
+        embed.set_footer(
+            text=footer_text or "\u200b",
+            icon_url=footer_icon if footer_icon else None
+        )
     
     if fields:
         for field in fields:
