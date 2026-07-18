@@ -98,7 +98,7 @@ class TelegramBridge(commands.Cog):
         source_key = await db.get_source_by_discord_id(ctx.channel.id)
         
         if not source_key:
-            await status_msg.edit(content="❌ Kênh này chưa được setup. Dùng lệnh `.setup <source>` trước.")
+            await status_msg.edit(content="❌ Kênh này chưa được setup. Dùng lệnh `>setup <source>` trước.")
             await status_msg.delete(delay=5)
             return
             
