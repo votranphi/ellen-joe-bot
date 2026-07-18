@@ -52,6 +52,7 @@ class Utility(commands.Cog):
         embed = create_custom_embed(
             description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭",
             title="🦈 Shark Ping",
+            color=0xff0000, # đỏ
             thumbnail=ELLEN_AVATAR_URL
         )
         
@@ -62,11 +63,12 @@ class Utility(commands.Cog):
         embed = create_custom_embed(
             description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đi làm việc đi, đừng phiền tôi nữa.",
             title="📋 Phiên bản hệ thống",
+            color=0xff0000, # đỏ
             thumbnail=ELLEN_AVATAR_URL
         )
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(name="bel", description="Giải trí: kiểm tra mức độ bel của bạn")
+    @commands.hybrid_command(name="bel", description="Kiểm tra mức độ bel của bạn")
     async def bel_check(self, ctx):
         bel_percent = secrets.randbelow(10001) / 100
         icon, comment = self._build_bel_comment(bel_percent)

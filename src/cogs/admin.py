@@ -1,7 +1,7 @@
 from discord import app_commands
 from discord.ext import commands
 from src.database import db
-from src.config import TELEGRAM_SOURCES
+from src.config import TELEGRAM_SOURCES, ELLEN_AVATAR_URL
 from src.utils import create_custom_embed
 
 class Admin(commands.Cog):
@@ -31,7 +31,7 @@ class Admin(commands.Cog):
         embed = create_custom_embed(
             title="✅ Setup Thành Công",
             description=f"Kênh này sẽ nhận tin từ: **{source_info['name']}**",
-            color=0x00ff00,
+            color=0x00ff00, # xanh lá
             thumbnail=source_info['icon_url']
         )
         await ctx.send(embed=embed)
@@ -45,7 +45,8 @@ class Admin(commands.Cog):
             embed = create_custom_embed(
                 title="✅ Đã hủy đăng ký",
                 description="Kênh này sẽ **không còn nhận tin nhắn** tự động nữa.",
-                color=0xff0000
+                color=0xff0000, # đỏ
+                thumbnail=ELLEN_AVATAR_URL
             )
             await ctx.send(embed=embed)
         else:
@@ -53,15 +54,15 @@ class Admin(commands.Cog):
 
     @commands.hybrid_command(name="say", description="[Admin] Gửi tin nhắn dạng Embed")
     @app_commands.describe(
-        content="Nội dung tin nhắn (Markdown)",
+        description="Nội dung tin nhắn (Markdown)",
         title="Tiêu đề (Optional)",
         image="Link ảnh lớn nằm dưới (Optional)",
         thumbnail="Link ảnh nhỏ góc phải (Optional)",
         color="Mã màu Hex, ví dụ: 00FF00 (Optional)"
     )
     @commands.has_permissions(administrator=True)
-    async def say_embed(self, ctx, content: str, title: str = None, image: str = None, thumbnail: str = None, color: str = None):
-        embed_color = 0xD7342A
+    async def say_embed(self, ctx, description: str, title: str = None, image: str = None, thumbnail: str = None, color: str = None):
+        embed_color = 0xFF0000 # đỏ
         if color:
             try:
                 embed_color = int(color.replace("#", ""), 16)
@@ -69,13 +70,13 @@ class Admin(commands.Cog):
                 pass
 
         kwargs = {
-            "description": content,
+            "description": description,
             "title": title,
             "color": embed_color,
             "image": image,
             "thumbnail": thumbnail
         }
-            
+
         embed = create_custom_embed(**kwargs)
 
         try:
@@ -93,13 +94,17 @@ class Admin(commands.Cog):
             synced = await self.bot.tree.sync()
             embed = create_custom_embed(
                 description=f"Đã đồng bộ **{len(synced)}** slash commands lên Discord.\n\nSlash commands sẽ xuất hiện sau vài giây.",
-                title="✅ Tree Sync Hoàn Tất"
+                title="✅ Tree Sync Hoàn Tất",
+                color=0x00ff00, # xanh lá
+                thumbnail=ELLEN_AVATAR_URL
             )
             await ctx.send(embed=embed)
         except Exception as e:
             embed = create_custom_embed(
                 description=f"Không thể đồng bộ: {str(e)}",
-                title="❌ Lỗi Sync Tree"
+                title="❌ Lỗi Sync Tree",
+                color=0xff0000, # đỏ
+                thumbnail=ELLEN_AVATAR_URL
             )
             await ctx.send(embed=embed)
 
