@@ -93,16 +93,16 @@ class Admin(commands.Cog):
         try:
             synced = await self.bot.tree.sync()
             embed = create_custom_embed(
-                description=f"Đã đồng bộ **{len(synced)}** slash commands lên Discord.\n\nSlash commands sẽ xuất hiện sau vài giây.",
                 title="✅ Tree Sync Hoàn Tất",
+                description=f"Đã đồng bộ **{len(synced)}** slash commands lên Discord.\n\nSlash commands sẽ xuất hiện sau vài giây.",
                 color=0x00ff00, # xanh lá
                 thumbnail=ELLEN_AVATAR_URL
             )
             await ctx.send(embed=embed)
         except Exception as e:
             embed = create_custom_embed(
-                description=f"Không thể đồng bộ: {str(e)}",
                 title="❌ Lỗi Sync Tree",
+                description=f"Không thể đồng bộ: {str(e)}",
                 color=0xff0000, # đỏ
                 thumbnail=ELLEN_AVATAR_URL
             )
