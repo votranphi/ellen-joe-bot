@@ -74,7 +74,10 @@ class Utility(commands.Cog):
         embed = create_custom_embed(
             title=f":pregnant_man: Bel Check: {ctx.author.name}",
             description=f"## Mức độ bel: {bel_percent:.2f}%\n{icon} {comment}",
-            footer_text="💫 Đạt 100% để nhận role Bel Vương"
+            color=secrets.randbelow(0x1000000),
+            footer_text="💫 Đạt 100% để nhận role Bel Vương",
+            author_name=None,
+            author_icon=None
         )
 
         await self._sync_bel_role(ctx, bel_percent)
