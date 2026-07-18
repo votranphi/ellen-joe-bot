@@ -14,16 +14,16 @@ class Utility(commands.Cog):
 
     def _build_bel_comment(self, bel_percent: float) -> tuple[str, str]:
         if bel_percent == 0:
-            return "💀", "Bel cạn sạch rồi, đúng nghĩa không còn một chút nào."
+            return "💀", "Gió thổi là bay, bộ xương di động."
         if bel_percent < 25:
-            return "😌", "Mức này còn rất thấp, chưa đủ để gọi là bel."
+            return "😌", "Mới nhú tí nọng, nhìn chung vẫn ốm nhom."
         if bel_percent < 50:
-            return "🤔", "Có dấu hiệu rồi đó, nhưng vẫn còn khá xa để thành bel thực thụ."
+            return "🤔", "Nửa nạc nửa mỡ, bụng bắt đầu rung rinh rồi."
         if bel_percent < 75:
-            return "🔥", "Khá rõ mùi bel, tiếp tục là sẽ lên rất nhanh."
+            return "🔥", "Tròn ủm, ngấn nào ra ngấn nấy."
         if bel_percent < 100:
-            return "👀", "Gần chạm ngưỡng cuối rồi, chỉ còn một bước nữa thôi."
-        return "👑", "100% bel vương xác nhận. Không còn gì để bàn cãi nữa."
+            return "👀", "Mỡ tràn bờ đê, chuẩn bị lăn thay vì đi."
+        return "👑", "Hệ tư tưởng xôi thịt. 100% Bel Vương!"
 
     async def _sync_bel_role(self, ctx, bel_percent: float):
         if not ctx.guild:
@@ -41,9 +41,9 @@ class Utility(commands.Cog):
             elif bel_percent == 0 and role in member.roles:
                 await member.remove_roles(role, reason="Bel check đạt 0%")
         except discord.Forbidden:
-            await ctx.send("⚠️ Bot không đủ quyền để chỉnh role Bel vương.")
+            await ctx.send("⚠️ Bot không đủ quyền để chỉnh role Bel Vương.")
         except discord.HTTPException:
-            await ctx.send("⚠️ Không thể cập nhật role Bel vương lúc này.")
+            await ctx.send("⚠️ Không thể cập nhật role Bel Vương lúc này.")
 
     @commands.hybrid_command(name="ping", description="Kiểm tra độ trễ kết nối của bot")
     async def ping(self, ctx):
@@ -74,7 +74,7 @@ class Utility(commands.Cog):
         embed = create_custom_embed(
             title=f":pregnant_man: Bel Check: {ctx.author.name}",
             description=f"## Mức độ bel: {bel_percent:.2f}%\n{icon} {comment}",
-            footer_text=":dizzy: Đạt 100% để nhận role Bel vương"
+            footer_text="💫 Đạt 100% để nhận role Bel Vương"
         )
 
         await self._sync_bel_role(ctx, bel_percent)
