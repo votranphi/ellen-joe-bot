@@ -1,6 +1,5 @@
 import discord
 from telethon.tl.types import MessageEntityTextUrl, MessageEntityBold, MessageEntityItalic, MessageEntityCode
-from src.config import ELLEN_AVATAR_URL
 
 TEMP_DIR = 'temp_media'
 MAX_FILE_SIZE_MB = 24 

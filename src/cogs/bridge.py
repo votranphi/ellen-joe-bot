@@ -84,6 +84,8 @@ class TelegramBridge(commands.Cog):
             print(f"📩 Live Sync: Tin nhắn từ {chat_id} -> {dest_discord_ids}")
             await self.forward_to_discord(event.message, dest_discord_ids)
 
+    ### COMMANDS SECTION BEGINS HERE ###
+
     @commands.hybrid_command(name="sync", description="[Admin] Đồng bộ tin nhắn cũ từ Telegram sang Discord")
     @app_commands.describe(limit="Số lượng tin nhắn muốn lấy (mặc định: 5)")
     @commands.has_permissions(administrator=True)

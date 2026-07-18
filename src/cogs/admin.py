@@ -8,6 +8,8 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    ### COMMANDS SECTION BEGINS HERE ###
+
     @commands.hybrid_command(name="setup", description="[Admin] Cấu hình kênh này nhận tin từ nguồn Telegram")
     @app_commands.describe(source_key="Mã nguồn (nens, hiragara, seele)")
     @commands.has_permissions(administrator=True)
@@ -31,7 +33,7 @@ class Admin(commands.Cog):
         embed = create_custom_embed(
             title="✅ Setup Thành Công",
             description=f"Kênh này sẽ nhận tin từ: **{source_info['name']}**",
-            color=0x00ff00, # xanh lá
+            color=0x00ff00, # green
             thumbnail=source_info['icon_url']
         )
         await ctx.send(embed=embed)
@@ -45,7 +47,7 @@ class Admin(commands.Cog):
             embed = create_custom_embed(
                 title="✅ Đã hủy đăng ký",
                 description="Kênh này sẽ **không còn nhận tin nhắn** tự động nữa.",
-                color=0xff0000, # đỏ
+                color=0xff0000, # red
                 thumbnail=ELLEN_AVATAR_URL
             )
             await ctx.send(embed=embed)
@@ -62,7 +64,7 @@ class Admin(commands.Cog):
     )
     @commands.has_permissions(administrator=True)
     async def say_embed(self, ctx, description: str, title: str = None, image: str = None, thumbnail: str = None, color: str = None):
-        embed_color = 0xFF0000 # đỏ
+        embed_color = 0xFF0000 # red
         if color:
             try:
                 embed_color = int(color.replace("#", ""), 16)
@@ -95,7 +97,7 @@ class Admin(commands.Cog):
             embed = create_custom_embed(
                 title="✅ Tree Sync Hoàn Tất",
                 description=f"Đã đồng bộ **{len(synced)}** slash commands lên Discord.\n\nSlash commands sẽ xuất hiện sau vài giây.",
-                color=0x00ff00, # xanh lá
+                color=0x00ff00, # green
                 thumbnail=ELLEN_AVATAR_URL
             )
             await ctx.send(embed=embed)
@@ -103,7 +105,7 @@ class Admin(commands.Cog):
             embed = create_custom_embed(
                 title="❌ Lỗi Sync Tree",
                 description=f"Không thể đồng bộ: {str(e)}",
-                color=0xff0000, # đỏ
+                color=0xff0000, # red
                 thumbnail=ELLEN_AVATAR_URL
             )
             await ctx.send(embed=embed)

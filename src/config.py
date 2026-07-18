@@ -31,3 +31,5 @@ TELEGRAM_SOURCES = {
 }
 
 ELLEN_AVATAR_URL = "https://pbs.twimg.com/media/GTX9pylaIAAvr-R.png"
+
+BEL_VUONG_ROLE_ID = 1528100067280551956 # only in Bean's server

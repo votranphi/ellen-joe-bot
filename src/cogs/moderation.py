@@ -5,6 +5,8 @@ class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    ### COMMANDS SECTION BEGINS HERE ###
+
     @commands.hybrid_command(name="clean", description="[Manage Messages] Dọn dẹp tin nhắn trong kênh")
     @app_commands.describe(amount="Số lượng tin nhắn cần xóa")
     @commands.has_permissions(manage_messages=True)
@@ -13,7 +15,7 @@ class Moderation(commands.Cog):
         if ctx.interaction:
             limit = amount
         else:
-            limit = amount + 1 # Tính cả tin nhắn gọi lệnh nếu dùng prefix
+            limit = amount + 1 # If using prefix, there must be an additional message to be deleted
         
         await ctx.channel.purge(limit=limit)
         await ctx.send(f"🧹 Đã dọn {amount} tin nhắn.", delete_after=3)

@@ -1,12 +1,9 @@
 import secrets
-
 import discord
 from discord.ext import commands
 from src.utils import create_custom_embed
 from src.version import __version__
-from src.config import ELLEN_AVATAR_URL
-
-BEL_VUONG_ROLE_ID = 1528100067280551956
+from src.config import ELLEN_AVATAR_URL, BEL_VUONG_ROLE_ID
 
 class Utility(commands.Cog):
     def __init__(self, bot):
@@ -45,6 +42,8 @@ class Utility(commands.Cog):
         except discord.HTTPException:
             await ctx.send("⚠️ Không thể cập nhật role Bel Vương lúc này.")
 
+    ### COMMANDS SECTION BEGINS HERE ###
+
     @commands.hybrid_command(name="ping", description="Kiểm tra độ trễ kết nối của bot")
     async def ping(self, ctx):
         latency = round(self.bot.latency * 1000)
@@ -52,7 +51,7 @@ class Utility(commands.Cog):
         embed = create_custom_embed(
             title="🦈 Shark Ping",
             description=f"Ping cái gì mà ping? Mau đưa **{latency} viên kẹo** đây 🍬🍭",
-            color=0xff0000, # đỏ
+            color=0xff0000, # red
             thumbnail=ELLEN_AVATAR_URL
         )
         
@@ -63,7 +62,7 @@ class Utility(commands.Cog):
         embed = create_custom_embed(
             title="📋 Phiên bản hệ thống",
             description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đừng phiền tôi nữa.",
-            color=0xff0000, # đỏ
+            color=0xff0000, # red
             thumbnail=ELLEN_AVATAR_URL
         )
         await ctx.send(embed=embed)
