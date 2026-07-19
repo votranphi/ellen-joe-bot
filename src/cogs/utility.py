@@ -3,44 +3,61 @@ import discord
 from discord.ext import commands
 from src.utils import create_custom_embed
 from src.version import __version__
-from src.config import ELLEN_AVATAR_URL, BEL_VUONG_ROLE_ID
+from src.config import ELLEN_AVATAR_URL, STATUS_PROFILES
 
 class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def _build_bel_comment(self, bel_percent: float) -> tuple[str, str]:
-        if bel_percent == 0:
-            return "💀", "Gió thổi là bay, bộ xương di động."
-        if bel_percent < 25:
-            return "😌", "Mới nhú tí nọng, nhìn chung vẫn ốm nhom."
-        if bel_percent < 50:
-            return "🤔", "Nửa nạc nửa mỡ, bụng bắt đầu rung rinh rồi."
-        if bel_percent < 75:
-            return "🔥", "Tròn ủm, ngấn nào ra ngấn nấy."
-        if bel_percent < 100:
-            return "👀", "Mỡ tràn bờ đê, chuẩn bị lăn thay vì đi."
-        return "👑", "Hệ tư tưởng xôi thịt. 100% Bel Vương!"
+    def _build_status_comment(self, percent: float, profile: dict) -> tuple[str, str]:
+        if percent == 0:
+            return profile["zero_icon"], profile["zero_message"]
+        if percent < 25:
+            return profile["low_icon"], profile["low_message"]
+        if percent < 50:
+            return profile["mid_icon"], profile["mid_message"]
+        if percent < 75:
+            return profile["high_icon"], profile["high_message"]
+        if percent < 100:
+            return profile["near_max_icon"], profile["near_max_message"]
+        return profile["max_icon"], profile["max_message"]
 
-    async def _sync_bel_role(self, ctx, bel_percent: float):
+    async def _sync_reward_role(self, ctx, percent: float, profile: dict):
         if not ctx.guild:
             return
 
         member = ctx.author
-        role = ctx.guild.get_role(BEL_VUONG_ROLE_ID)
+        role_id = profile["role_id"]
+        role = ctx.guild.get_role(role_id) if role_id else None
         if not role:
             return
 
         try:
-            if bel_percent == 100:
+            if percent == 100:
                 if role not in member.roles:
-                    await member.add_roles(role, reason="Bel check đạt 100%")
-            elif bel_percent == 0 and role in member.roles:
-                await member.remove_roles(role, reason="Bel check đạt 0%")
+                    await member.add_roles(role, reason=f'{profile["display_name"]} check đạt 100%')
+            elif percent == 0 and role in member.roles:
+                await member.remove_roles(role, reason=f'{profile["display_name"]} check đạt 0%')
         except discord.Forbidden:
-            await ctx.send("⚠️ Bot không đủ quyền để chỉnh role Bel Vương.")
+            await ctx.send(f'⚠️ Bot không đủ quyền để chỉnh role {profile["display_name"]}.')
         except discord.HTTPException:
-            await ctx.send("⚠️ Không thể cập nhật role Bel Vương lúc này.")
+            await ctx.send(f'⚠️ Không thể cập nhật role {profile["display_name"]} lúc này.')
+
+    async def _run_status_check(self, ctx, profile_key: str):
+        profile = STATUS_PROFILES[profile_key]
+        percent = secrets.randbelow(10001) / 100
+        icon, comment = self._build_status_comment(percent, profile)
+        value_label = profile["value_label"]
+
+        embed = create_custom_embed(
+            title=f'{profile["title_prefix"]}: {ctx.author.name}',
+            description=f'## Mức độ {value_label}: {percent:.2f}%\n{icon} {comment}',
+            color=secrets.randbelow(0x1000000),
+            footer_text=profile["footer"]
+        )
+
+        await self._sync_reward_role(ctx, percent, profile)
+        await ctx.send(embed=embed)
 
     ### COMMANDS SECTION BEGINS HERE ###
 
@@ -69,18 +86,15 @@ class Utility(commands.Cog):
 
     @commands.hybrid_command(name="bel", description="Kiểm tra mức độ bel của bạn")
     async def bel_check(self, ctx):
-        bel_percent = secrets.randbelow(10001) / 100
-        icon, comment = self._build_bel_comment(bel_percent)
+        await self._run_status_check(ctx, "bel")
 
-        embed = create_custom_embed(
-            title=f":pregnant_man: Bel Check: {ctx.author.name}",
-            description=f"## Mức độ bel: {bel_percent:.2f}%\n{icon} {comment}",
-            color=secrets.randbelow(0x1000000),
-            footer_text="💫 Đạt 100% để nhận role Bel Vương"
-        )
+    @commands.hybrid_command(name="goon", description="Kiểm tra mức độ lọ của bạn")
+    async def goon_check(self, ctx):
+        await self._run_status_check(ctx, "goon")
 
-        await self._sync_bel_role(ctx, bel_percent)
-        await ctx.send(embed=embed)
+    @commands.hybrid_command(name="dam", description="Kiểm tra mức độ dâm của bạn")
+    async def dam_check(self, ctx):
+        await self._run_status_check(ctx, "dam")
 
 async def setup(bot):
     await bot.add_cog(Utility(bot))
