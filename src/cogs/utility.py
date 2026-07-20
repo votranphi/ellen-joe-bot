@@ -1,5 +1,8 @@
 import secrets
+from typing import Optional
+
 import discord
+from discord import app_commands
 from discord.ext import commands
 from src.utils import create_custom_embed
 from src.version import __version__
@@ -22,11 +25,10 @@ class Utility(commands.Cog):
             return profile["near_max_icon"], profile["near_max_message"]
         return profile["max_icon"], profile["max_message"]
 
-    async def _sync_reward_role(self, ctx, percent: float, profile: dict):
+    async def _sync_reward_role(self, ctx, member: discord.Member, percent: float, profile: dict):
         if not ctx.guild:
             return
 
-        member = ctx.author
         role_id = profile["role_id"]
         role = ctx.guild.get_role(role_id) if role_id else None
         if not role:
@@ -43,20 +45,24 @@ class Utility(commands.Cog):
         except discord.HTTPException:
             await ctx.send(f'⚠️ Không thể cập nhật role {profile["display_name"]} lúc này.')
 
-    async def _run_status_check(self, ctx, profile_key: str):
+    async def _run_status_check(self, ctx, profile_key: str, member: Optional[discord.Member] = None):
         profile = STATUS_PROFILES[profile_key]
+        target = member or ctx.author
         percent = secrets.randbelow(10001) / 100
         icon, comment = self._build_status_comment(percent, profile)
         value_label = profile["value_label"]
+        is_self_check = target.id == ctx.author.id
+        footer_text = profile["self_footer"] if is_self_check else profile["other_footer"]
 
         embed = create_custom_embed(
-            title=f'{profile["title_prefix"]}: {ctx.author.name}',
+            title=f'{profile["title_prefix"]}: {target.name}',
             description=f'## Mức độ {value_label}: {percent:.2f}%\n{icon} {comment}',
             color=secrets.randbelow(0x1000000),
-            footer_text=profile["footer"]
+            footer_text=footer_text
         )
 
-        await self._sync_reward_role(ctx, percent, profile)
+        if is_self_check:
+            await self._sync_reward_role(ctx, target, percent, profile)
         await ctx.send(embed=embed)
 
     ### COMMANDS SECTION BEGINS HERE ###
@@ -84,17 +90,20 @@ class Utility(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(name="bel", description="Kiểm tra mức độ bel của bạn")
-    async def bel_check(self, ctx):
-        await self._run_status_check(ctx, "bel")
+    @commands.hybrid_command(name="bel", description="Kiểm tra mức độ bel của bạn hoặc người khác")
+    @app_commands.describe(member="Người muốn check mức độ bel")
+    async def bel_check(self, ctx, member: Optional[discord.Member] = None):
+        await self._run_status_check(ctx, "bel", member)
 
-    @commands.hybrid_command(name="goon", description="Kiểm tra mức độ lọ của bạn")
-    async def goon_check(self, ctx):
-        await self._run_status_check(ctx, "goon")
+    @commands.hybrid_command(name="goon", description="Kiểm tra mức độ lọ của bạn hoặc người khác")
+    @app_commands.describe(member="Người muốn check mức độ lọ")
+    async def goon_check(self, ctx, member: Optional[discord.Member] = None):
+        await self._run_status_check(ctx, "goon", member)
 
-    @commands.hybrid_command(name="dam", description="Kiểm tra mức độ dâm của bạn")
-    async def dam_check(self, ctx):
-        await self._run_status_check(ctx, "dam")
+    @commands.hybrid_command(name="dam", description="Kiểm tra mức độ dâm của bạn hoặc người khác")
+    @app_commands.describe(member="Người muốn check mức độ dâm")
+    async def dam_check(self, ctx, member: Optional[discord.Member] = None):
+        await self._run_status_check(ctx, "dam", member)
 
 async def setup(bot):
     await bot.add_cog(Utility(bot))
