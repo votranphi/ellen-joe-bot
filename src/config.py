@@ -87,4 +87,22 @@ STATUS_PROFILES = { # only in Bean's server
         "near_max_message": ":eyes:Quá cháy, sắp bùng nổ rồi.",
         "max_message": ":crown:Đỉnh nóc kịch trần. 100% Dam Dang!",
     },
+    "aura": {
+        "role": {
+            "name": "King Aura",
+            "id": 1529034268381155338,
+        },
+        "footers": {
+            "self": "💫 Đạt 100% để nhận role King Aura",
+            "other": "✨ Check aura thành công!"
+        },
+        "title_prefix": ":shushing_face: Aura Check",
+        "value_label": "aura",
+        "zero_message": ":ghost: Âm aura, chuẩn L NPC mờ nhạt.",
+        "low_message": ":leaves: Aura hơi phèn, chưa đủ trình flex.",
+        "mid_message": ":nail_care: Cũng slay đấy, bắt đầu có nét rồi.",
+        "high_message": ":fire: Keo lỳ tái châu, hào quang chói lóa.",
+        "near_max_message": ":star_struck: Đỉnh nóc, aura áp đảo cả server.",
+        "max_message": ":crown: W Rizz, Sigma chúa. 100% King Aura!",
+    },
 }

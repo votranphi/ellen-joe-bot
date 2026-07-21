@@ -106,5 +106,10 @@ class Utility(commands.Cog):
     async def dam_check(self, ctx, member: Optional[discord.Member] = None):
         await self._run_status_check(ctx, "dam", member)
 
+    @commands.hybrid_command(name="aura", description="Kiểm tra aura của bạn hoặc người khác")
+    @app_commands.describe(member="Người muốn check aura")
+    async def aura_check(self, ctx, member: Optional[discord.Member] = None):
+        await self._run_status_check(ctx, "aura", member)
+
 async def setup(bot):
     await bot.add_cog(Utility(bot))
