@@ -85,7 +85,7 @@ class Utility(commands.Cog):
     async def version(self, ctx):
         embed = create_custom_embed(
             title="📋 Phiên bản hệ thống",
-            description=f"Tôi đang chạy phiên bản **v{__version__}**\n\nHỏi làm gì? Đừng phiền tôi nữa.",
+            description=f"Tôi đang chạy phiên bản **v{__version__}**",
             color=0xff0000, # red
             thumbnail=ELLEN_AVATAR_URL
         )
