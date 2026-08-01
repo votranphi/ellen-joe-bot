@@ -111,5 +111,10 @@ class Utility(commands.Cog):
     async def aura_check(self, ctx, member: Optional[discord.Member] = None):
         await self._run_status_check(ctx, "aura", member)
 
+    @commands.hybrid_command(name="ngu", description="Kiểm tra độ ngu của bạn hoặc người khác")
+    @app_commands.describe(member="Người muốn check độ ngu")
+    async def ngu_check(self, ctx, member: Optional[discord.Member] = None):
+        await self._run_status_check(ctx, "ngu", member)
+
 async def setup(bot):
     await bot.add_cog(Utility(bot))

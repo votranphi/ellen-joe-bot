@@ -100,9 +100,27 @@ STATUS_PROFILES = { # only in Bean's server
         "value_label": "aura",
         "zero_message": ":ghost: Âm aura, chuẩn L NPC mờ nhạt.",
         "low_message": ":leaves: Aura hơi phèn, chưa đủ trình flex.",
-        "mid_message": ":nail_care: Cũng slay đấy, bắt đầu có nét rồi.",
+        "mid_message": ":nail_care: Cũng được đấy, bắt đầu có nét rồi.",
         "high_message": ":fire: Keo lỳ tái châu, hào quang chói lóa.",
         "near_max_message": ":star_struck: Đỉnh nóc, aura áp đảo cả server.",
         "max_message": ":crown: W Rizz, Sigma chúa. 100% King Aura!",
+    },
+    "ngu": {
+        "role": {
+            "name": "Ngu Nhất Server",
+            "id": 1533106918715822181,
+        },
+        "footers": {
+            "self": "💫 Đạt 100% để nhận role Ngu Nhất Server",
+            "other": "✨ Check độ ngu thành công!"
+        },
+        "title_prefix": ":clown: Ngu Check",
+        "value_label": "độ ngu",
+        "zero_message": ":brain: IQ vô cực, 10 điểm không có nhưng!",
+        "low_message": ":leaves: Não hơi lag nhẹ, vẫn còn cứu được.",
+        "mid_message": ":penguin: Chớm xà lơ, hệ điều hành load hơi chậm.",
+        "high_message": ":clown: Báo thủ real, thở ra là thấy cảm lạnh.",
+        "near_max_message": ":skull: Tư duy đi vào lòng đất. Quên mang não hả?",
+        "max_message": ":crown: Kẻ hủy diệt tri thức. 100% Ngu Nhất Server!",
     },
 }
