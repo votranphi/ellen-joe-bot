@@ -115,7 +115,7 @@ STATUS_PROFILES = { # only in Bean's server
             "other": "✨ Check độ ngu thành công!"
         },
         "title_prefix": ":clown: Ngu Check",
-        "value_label": "độ ngu",
+        "value_label": "ngu",
         "zero_message": ":brain: IQ vô cực, 10 điểm không có nhưng!",
         "low_message": ":leaves: Não hơi lag nhẹ, vẫn còn cứu được.",
         "mid_message": ":penguin: Chớm xà lơ, hệ điều hành load hơi chậm.",
