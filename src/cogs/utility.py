@@ -12,6 +12,41 @@ class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def _parse_role_color(self, color_value) -> discord.Color:
+        return discord.Color(int(str(color_value)[1:], 16))
+
+    def _get_reward_role_name(self, profile: dict) -> str:
+        role_config = profile["role"]
+        return role_config["name"]
+
+    def _find_reward_role(self, guild: discord.Guild, profile: dict):
+        role_name = self._get_reward_role_name(profile)
+        return discord.utils.get(guild.roles, name=role_name)
+
+    async def _ensure_reward_role(self, ctx, profile: dict):
+        if not ctx.guild:
+            return None
+
+        role = self._find_reward_role(ctx.guild, profile)
+        if role:
+            return role
+
+        role_name = self._get_reward_role_name(profile)
+        role_color = self._parse_role_color(profile["role"]["color"])
+
+        try:
+            return await ctx.guild.create_role(
+                name=role_name,
+                color=role_color,
+                reason=f"Tạo role tự động cho {role_name}",
+            )
+        except discord.Forbidden:
+            await ctx.send(f"⚠️ Bot không đủ quyền để tạo role {role_name}.")
+        except discord.HTTPException:
+            await ctx.send(f"⚠️ Không thể tạo role {role_name} lúc này.")
+
+        return None
+
     def _build_status_comment(self, percent: float, profile: dict) -> tuple[str, str]:
         if percent == 0:
             return profile["zero_message"]
@@ -29,22 +64,34 @@ class Utility(commands.Cog):
         if not ctx.guild:
             return
 
-        role_id = profile["role"]["id"]
-        role = ctx.guild.get_role(role_id) if role_id else None
-        if not role:
-            return
+        role_name = self._get_reward_role_name(profile)
 
-        try:
-            role_name = profile["role"]["name"]
-            if percent == 100:
+        if percent == 100:
+            role = await self._ensure_reward_role(ctx, profile)
+            if not role:
+                return
+
+            try:
                 if role not in member.roles:
                     await member.add_roles(role, reason=f'{role_name} check đạt 100%')
-            elif percent == 0 and role in member.roles:
-                await member.remove_roles(role, reason=f'{role_name} check đạt 0%')
-        except discord.Forbidden:
-            await ctx.send(f'⚠️ Bot không đủ quyền để chỉnh role {role_name}.')
-        except discord.HTTPException:
-            await ctx.send(f'⚠️ Không thể cập nhật role {role_name} lúc này.')
+            except discord.Forbidden:
+                await ctx.send(f'⚠️ Bot không đủ quyền để chỉnh role {role_name}.')
+            except discord.HTTPException:
+                await ctx.send(f'⚠️ Không thể cập nhật role {role_name} lúc này.')
+            return
+
+        if percent == 0:
+            role = self._find_reward_role(ctx.guild, profile)
+            if not role:
+                return
+
+            try:
+                if role in member.roles:
+                    await member.remove_roles(role, reason=f'{role_name} check đạt 0%')
+            except discord.Forbidden:
+                await ctx.send(f'⚠️ Bot không đủ quyền để chỉnh role {role_name}.')
+            except discord.HTTPException:
+                await ctx.send(f'⚠️ Không thể cập nhật role {role_name} lúc này.')
 
     async def _run_status_check(self, ctx, profile_key: str, member: Optional[discord.Member] = None):
         profile = STATUS_PROFILES[profile_key]

@@ -32,11 +32,11 @@ TELEGRAM_SOURCES = {
 
 ELLEN_AVATAR_URL = "https://pbs.twimg.com/media/GTX9pylaIAAvr-R.png"
 
-STATUS_PROFILES = { # only in Bean's server
+STATUS_PROFILES = {
     "bel": {
         "role": {
             "name": "Bel Vương",
-            "id": 1528100067280551956,
+            "color": "#1abc9c",
         },
         "footers": {
             "self": "💫 Đạt 100% để nhận role Bel Vương",
@@ -54,7 +54,7 @@ STATUS_PROFILES = { # only in Bean's server
     "goon": {
         "role": {
             "name": "Goon Thủ",
-            "id": 1528271445392625824,
+            "color": "#e67e22",
         },
         "footers": {
             "self": "💫 Đạt 100% để nhận role Goon Thủ",
@@ -72,7 +72,7 @@ STATUS_PROFILES = { # only in Bean's server
     "dam": {
         "role": {
             "name": "Dam Dang",
-            "id": 1528271546999636009,
+            "color": "#d4843d",
         },
         "footers": {
             "self": "💫 Đạt 100% để nhận role Dam Dang",
@@ -90,7 +90,7 @@ STATUS_PROFILES = { # only in Bean's server
     "aura": {
         "role": {
             "name": "King Aura",
-            "id": 1529034268381155338,
+            "color": "#55fffa",
         },
         "footers": {
             "self": "💫 Đạt 100% để nhận role King Aura",
@@ -108,7 +108,7 @@ STATUS_PROFILES = { # only in Bean's server
     "ngu": {
         "role": {
             "name": "Ngu Nhất Server",
-            "id": 1533106918715822181,
+            "color": "#181616",
         },
         "footers": {
             "self": "💫 Đạt 100% để nhận role Ngu Nhất Server",
