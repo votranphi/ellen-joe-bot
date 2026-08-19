@@ -97,17 +97,14 @@ class Utility(commands.Cog):
         profile = STATUS_PROFILES[profile_key]
         target = member or ctx.author
 
-        # --- ĐOẠN CODE TEST TỈ LỆ 1/10 ---
-        # Quay random 1 số từ 0 đến 9. Nếu ra 0 (tỉ lệ 1/10), cho luôn 100%.
-        if secrets.randbelow(10) == 0:
+        # manipulate the result to let member to get the role easily
+        manipulate_percent = secrets.randbelow(200)
+        if manipulate_percent == 199:
             percent = 100.0
-        # Nếu muốn test cả trường hợp 0% bị tước role với tỉ lệ 1/10:
-        elif secrets.randbelow(9) == 0:
+        elif manipulate_percent == 0:
             percent = 0.0
         else:
-            # Các trường hợp còn lại sẽ ngẫu nhiên từ 0.00% đến 99.99%
             percent = secrets.randbelow(10001) / 100
-        # ----------------------------------
 
         comment = self._build_status_comment(percent, profile)
         value_label = profile["value_label"]
