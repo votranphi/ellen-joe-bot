@@ -54,40 +54,6 @@ class Admin(commands.Cog):
         else:
             await ctx.send("⚠️ Kênh này chưa được setup nguồn nào cả.")
 
-    @commands.hybrid_command(name="say", description="[Admin] Gửi tin nhắn dạng Embed")
-    @app_commands.describe(
-        description="Nội dung tin nhắn (Markdown)",
-        title="Tiêu đề (Optional)",
-        image="Link ảnh lớn nằm dưới (Optional)",
-        thumbnail="Link ảnh nhỏ góc phải (Optional)",
-        color="Mã màu Hex, ví dụ: 00FF00 (Optional)"
-    )
-    @commands.has_permissions(administrator=True)
-    async def say_embed(self, ctx, description: str, title: str = None, image: str = None, thumbnail: str = None, color: str = None):
-        embed_color = 0xFF0000 # red
-        if color:
-            try:
-                embed_color = int(color.replace("#", ""), 16)
-            except ValueError:
-                pass
-
-        kwargs = {
-            "description": description,
-            "title": title,
-            "color": embed_color,
-            "image": image,
-            "thumbnail": thumbnail
-        }
-
-        embed = create_custom_embed(**kwargs)
-
-        try:
-            await ctx.message.delete()
-        except:
-            pass
-
-        await ctx.send(embed=embed)
-
     @commands.hybrid_command(name="synctree", description="[Admin] Đồng bộ slash commands lên Discord")
     @commands.has_permissions(administrator=True)
     async def sync_tree(self, ctx):
