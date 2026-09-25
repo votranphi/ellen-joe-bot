@@ -64,4 +64,11 @@ class Database:
             upsert=True
         )
 
+    async def remove_sticky_message(self, channel_id):
+        result = await asyncio.to_thread(
+            self.sticky_collection.delete_one,
+            {"channel_id": channel_id}
+        )
+        return result.deleted_count > 0
+
 db = Database()

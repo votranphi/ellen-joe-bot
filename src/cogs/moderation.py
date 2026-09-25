@@ -41,6 +41,24 @@ class Moderation(commands.Cog):
                 embed=config.get("embed")
             )
 
+    async def _remove_sticky_message(self, channel):
+        channel_id = channel.id
+        async with self._get_sticky_lock(channel_id):
+            config = await db.get_sticky_message(channel_id)
+            if not config:
+                return False
+
+            message_id = config.get("message_id")
+            if message_id:
+                try:
+                    message = await channel.fetch_message(message_id)
+                    await message.delete()
+                except (discord.NotFound, discord.Forbidden):
+                    pass
+
+            await db.remove_sticky_message(channel_id)
+            return True
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot or not message.guild:
@@ -164,6 +182,24 @@ class Moderation(commands.Cog):
         await self._replace_sticky_message(ctx.channel, config)
         if ctx.interaction:
             await ctx.send("✅ Đã thiết lập sticky embed message cho kênh này.", ephemeral=True)
+
+    @commands.hybrid_command(name="remove-sticky", description="[Manage Messages] Xóa sticky message khỏi kênh")
+    @commands.has_permissions(manage_messages=True)
+    async def remove_sticky_message(self, ctx):
+        if ctx.interaction:
+            await ctx.defer(ephemeral=True)
+
+        removed = await self._remove_sticky_message(ctx.channel)
+        response = (
+            "✅ Đã xóa sticky message khỏi kênh này."
+            if removed
+            else "ℹ️ Kênh này hiện không có sticky message."
+        )
+
+        if ctx.interaction:
+            await ctx.send(response, ephemeral=True)
+        else:
+            await ctx.send(response, delete_after=5)
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))
