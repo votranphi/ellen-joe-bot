@@ -10,7 +10,7 @@ class Admin(commands.Cog):
 
     ### COMMANDS SECTION BEGINS HERE ###
 
-    @commands.hybrid_command(name="setup", description="[Admin] Cấu hình kênh này nhận tin từ nguồn Telegram")
+    @commands.hybrid_command(name="setup-telegram", description="[Admin] Cấu hình kênh này nhận tin từ nguồn Telegram")
     @app_commands.describe(source_key="Mã nguồn (nens, hiragara, seele)")
     @commands.has_permissions(administrator=True)
     async def setup_channel(self, ctx, source_key: str = None):
@@ -38,7 +38,7 @@ class Admin(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(name="remove", aliases=['stop', 'unsubscribe'], description="[Admin] Hủy nhận tin tự động ở kênh hiện tại")
+    @commands.hybrid_command(name="remove-telegram", description="[Admin] Hủy nhận tin tự động ở kênh hiện tại")
     @commands.has_permissions(administrator=True)
     async def remove_channel(self, ctx):
         is_deleted = await db.remove_mapping(ctx.channel.id)
