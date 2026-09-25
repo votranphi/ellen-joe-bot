@@ -8,7 +8,9 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    ### COMMANDS SECTION BEGINS HERE ###
+    ########################################
+    ##### COMMANDS SECTION BEGINS HERE #####
+    ########################################
 
     @commands.hybrid_command(name="setup-telegram", description="[Admin] Cấu hình kênh này nhận tin từ nguồn Telegram")
     @app_commands.describe(source_key="Mã nguồn (nens, hiragara, seele)")

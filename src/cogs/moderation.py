@@ -50,7 +50,9 @@ class Moderation(commands.Cog):
         if config:
             await self._replace_sticky_message(message.channel, config)
 
-    ### COMMANDS SECTION BEGINS HERE ###
+    ########################################
+    ##### COMMANDS SECTION BEGINS HERE #####
+    ########################################
 
     @commands.hybrid_command(name="clean", description="[Manage Messages] Dọn dẹp tin nhắn trong kênh")
     @app_commands.describe(amount="Số lượng tin nhắn cần xóa")
