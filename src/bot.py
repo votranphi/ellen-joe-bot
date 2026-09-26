@@ -1,8 +1,9 @@
 import discord
-from discord.ext import commands
-import os
 from dotenv import load_dotenv
+from discord.ext import commands
+
 from src.version import __version__
+from src.config import DISCORD_PREFIX, DISCORD_TOKEN
 
 load_dotenv()
 
@@ -11,7 +12,7 @@ intents.message_content = True
 
 class EllenJoeBot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix='>', intents=intents, help_command=None)
+        super().__init__(command_prefix=DISCORD_PREFIX, intents=intents, help_command=None)
 
     async def setup_hook(self):
         await self.load_extension('src.cogs.admin')
@@ -31,4 +32,4 @@ class EllenJoeBot(commands.Bot):
 bot = EllenJoeBot()
 
 if __name__ == "__main__":
-    bot.run(os.getenv('DISCORD_TOKEN'))
+    bot.run(DISCORD_TOKEN)

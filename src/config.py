@@ -7,30 +7,44 @@ def get_env_int(key):
     val = os.getenv(key)
     return int(val) if val and val.lstrip('-').isdigit() else None
 
+# Constant from .env
+DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+TELE_API_ID = os.getenv('TELE_API_ID')
+TELE_API_HASH = os.getenv('TELE_API_HASH')
+MONGO_URI = os.getenv('MONGO_URI')
+
+TELE_NENS_CHANNEL_ID = get_env_int('TELE_NENS_CHANNEL_ID')
+TELE_SL_CHANNEL_ID = get_env_int('TELE_SL_CHANNEL_ID')
+TELE_H_CHANNEL_ID = get_env_int('TELE_H_CHANNEL_ID')
+TELE_T_CHANNEL_ID = get_env_int('TELE_T_CHANNEL_ID')
+
+DISCORD_PREFIX = os.getenv('DISCORD_PREFIX')
+
+# Other contants
+ELLEN_AVATAR_URL = "https://pbs.twimg.com/media/GTX9pylaIAAvr-R.png"
+
 TELEGRAM_SOURCES = {
     'nens': {
-        'tele_id': get_env_int('TELE_NENS_CHANNEL_ID'),
+        'tele_id': TELE_NENS_CHANNEL_ID,
         'name': 'New Eridu News Stand',
         'icon_url': 'https://static.icy-veins.com/images/zenless-zone-zero/og-images/howls-newsstand.webp'
     },
     'seele': {
-        'tele_id': get_env_int('TELE_SL_CHANNEL_ID'),
+        'tele_id': TELE_SL_CHANNEL_ID,
         'name': 'Seele Leaks',
         'icon_url': 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRqGTeTOOx2aKvSCj7Pi3iuTGHFpndmcDsfyeu5jO-k9Tf95eBd'
     },
     'hiragara': {
-        'tele_id': get_env_int('TELE_H_CHANNEL_ID'),
+        'tele_id': TELE_H_CHANNEL_ID,
         'name': 'Hiragara Leaks',
         'icon_url': 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTT9Cag-1GSvCyUuP10mVXkP2R7MZpU6BSZa0Uw9iaBFxtXLjZQ'
     },
     'test': {
-        'tele_id': get_env_int('TELE_T_CHANNEL_ID'),
+        'tele_id': TELE_T_CHANNEL_ID,
         'name': 'Test',
         'icon_url': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFfUnCIPVTtIm4RpwIrOehAhXxNXeuKY2TZQ&s'
     }
 }
-
-ELLEN_AVATAR_URL = "https://pbs.twimg.com/media/GTX9pylaIAAvr-R.png"
 
 STATUS_PROFILES = {
     "bel": {

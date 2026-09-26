@@ -1,18 +1,19 @@
+import os
+import asyncio
 import discord
 from discord import app_commands
 from discord.ext import commands
 from telethon import TelegramClient, events
-import os
-import asyncio
-from src.config import TELEGRAM_SOURCES
+
+from src.config import TELEGRAM_SOURCES, TELE_API_ID, TELE_API_HASH
 from src.database import db
 from src.utils import format_discord_message, TEMP_DIR, MAX_FILE_SIZE_BYTES, MAX_FILE_SIZE_MB
 
 class TelegramBridge(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.api_id = os.getenv('TELE_API_ID')
-        self.api_hash = os.getenv('TELE_API_HASH')
+        self.api_id = TELE_API_ID
+        self.api_hash = TELE_API_HASH
         self.t_client = TelegramClient('session_bot_v2', self.api_id, self.api_hash)
         
     async def cog_load(self):

@@ -1,11 +1,12 @@
-import os
 import asyncio
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
+from src.config import MONGO_URI
+
 class Database:
     def __init__(self):
-        uri = os.getenv("MONGO_URI")
+        uri = MONGO_URI
         self.client = MongoClient(uri, server_api=ServerApi('1'))
         self.db = self.client['discord_bot_db']
         self.collection = self.db['channel_mappings']
