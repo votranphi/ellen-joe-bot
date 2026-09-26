@@ -8,9 +8,11 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    ### COMMANDS SECTION BEGINS HERE ###
+    ########################################
+    ##### COMMANDS SECTION BEGINS HERE #####
+    ########################################
 
-    @commands.hybrid_command(name="setup", description="[Admin] Cấu hình kênh này nhận tin từ nguồn Telegram")
+    @commands.hybrid_command(name="setup-telegram", description="[Admin] Cấu hình kênh này nhận tin từ nguồn Telegram")
     @app_commands.describe(source_key="Mã nguồn (nens, hiragara, seele)")
     @commands.has_permissions(administrator=True)
     async def setup_channel(self, ctx, source_key: str = None):
@@ -38,7 +40,7 @@ class Admin(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command(name="remove", aliases=['stop', 'unsubscribe'], description="[Admin] Hủy nhận tin tự động ở kênh hiện tại")
+    @commands.hybrid_command(name="remove-telegram", description="[Admin] Hủy nhận tin tự động ở kênh hiện tại")
     @commands.has_permissions(administrator=True)
     async def remove_channel(self, ctx):
         is_deleted = await db.remove_mapping(ctx.channel.id)
@@ -53,40 +55,6 @@ class Admin(commands.Cog):
             await ctx.send(embed=embed)
         else:
             await ctx.send("⚠️ Kênh này chưa được setup nguồn nào cả.")
-
-    @commands.hybrid_command(name="say", description="[Admin] Gửi tin nhắn dạng Embed")
-    @app_commands.describe(
-        description="Nội dung tin nhắn (Markdown)",
-        title="Tiêu đề (Optional)",
-        image="Link ảnh lớn nằm dưới (Optional)",
-        thumbnail="Link ảnh nhỏ góc phải (Optional)",
-        color="Mã màu Hex, ví dụ: 00FF00 (Optional)"
-    )
-    @commands.has_permissions(administrator=True)
-    async def say_embed(self, ctx, description: str, title: str = None, image: str = None, thumbnail: str = None, color: str = None):
-        embed_color = 0xFF0000 # red
-        if color:
-            try:
-                embed_color = int(color.replace("#", ""), 16)
-            except ValueError:
-                pass
-
-        kwargs = {
-            "description": description,
-            "title": title,
-            "color": embed_color,
-            "image": image,
-            "thumbnail": thumbnail
-        }
-
-        embed = create_custom_embed(**kwargs)
-
-        try:
-            await ctx.message.delete()
-        except:
-            pass
-
-        await ctx.send(embed=embed)
 
     @commands.hybrid_command(name="synctree", description="[Admin] Đồng bộ slash commands lên Discord")
     @commands.has_permissions(administrator=True)
