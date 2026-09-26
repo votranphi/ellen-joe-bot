@@ -145,7 +145,7 @@ class Moderation(commands.Cog):
         if ctx.interaction:
             await ctx.send("✅ Đã thiết lập sticky message cho kênh này.", ephemeral=True)
         else:
-            await ctx.send("✅ Đã thiết lập sticky message cho kênh này.", delete_after=5)
+            await ctx.send("✅ Đã thiết lập sticky message cho kênh này.", delete_after=3)
 
     @commands.hybrid_command(name="setup-sticky-embed", description="[Manage Messages] Ghim một embed ở cuối kênh")
     @app_commands.describe(
@@ -189,13 +189,19 @@ class Moderation(commands.Cog):
         if ctx.interaction:
             await ctx.send("✅ Đã thiết lập sticky embed message cho kênh này.", ephemeral=True)
         else:
-            await ctx.send("✅ Đã thiết lập sticky embed message cho kênh này.", delete_after=5)
+            await ctx.send("✅ Đã thiết lập sticky embed message cho kênh này.", delete_after=3)
 
     @commands.hybrid_command(name="remove-sticky", description="[Manage Messages] Xóa sticky message khỏi kênh")
     @commands.has_permissions(manage_messages=True)
     async def remove_sticky_message(self, ctx):
         if ctx.interaction:
             await ctx.defer(ephemeral=True)
+
+        try:
+            if ctx.message:
+                await ctx.message.delete()
+        except discord.HTTPException:
+            pass
 
         removed = await self._remove_sticky_message(ctx.channel)
         response = (
@@ -207,7 +213,7 @@ class Moderation(commands.Cog):
         if ctx.interaction:
             await ctx.send(response, ephemeral=True)
         else:
-            await ctx.send(response, delete_after=5)
+            await ctx.send(response, delete_after=3)
 
 async def setup(bot):
     await bot.add_cog(Moderation(bot))
