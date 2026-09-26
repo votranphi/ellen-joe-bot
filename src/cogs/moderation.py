@@ -16,10 +16,16 @@ class Moderation(commands.Cog):
             self.sticky_locks[channel_id] = asyncio.Lock()
         return self.sticky_locks[channel_id]
 
-    async def _replace_sticky_message(self, channel, config):
+    async def _replace_sticky_message(self, channel, config=None):
         channel_id = channel.id
         async with self._get_sticky_lock(channel_id):
-            old_message_id = config.get("message_id")
+            current_config = await db.get_sticky_message(channel_id)
+            if config is None:
+                config = current_config
+            if not config:
+                return
+
+            old_message_id = current_config.get("message_id") if current_config else None
             if old_message_id:
                 try:
                     old_message = await channel.fetch_message(old_message_id)
@@ -64,9 +70,7 @@ class Moderation(commands.Cog):
         if message.author.bot or not message.guild:
             return
 
-        config = await db.get_sticky_message(message.channel.id)
-        if config:
-            await self._replace_sticky_message(message.channel, config)
+        await self._replace_sticky_message(message.channel)
 
     ########################################
     ##### COMMANDS SECTION BEGINS HERE #####
@@ -140,6 +144,8 @@ class Moderation(commands.Cog):
         await self._replace_sticky_message(ctx.channel, config)
         if ctx.interaction:
             await ctx.send("✅ Đã thiết lập sticky message cho kênh này.", ephemeral=True)
+        else:
+            await ctx.send("✅ Đã thiết lập sticky message cho kênh này.", delete_after=5)
 
     @commands.hybrid_command(name="setup-sticky-embed", description="[Manage Messages] Ghim một embed ở cuối kênh")
     @app_commands.describe(
@@ -182,6 +188,8 @@ class Moderation(commands.Cog):
         await self._replace_sticky_message(ctx.channel, config)
         if ctx.interaction:
             await ctx.send("✅ Đã thiết lập sticky embed message cho kênh này.", ephemeral=True)
+        else:
+            await ctx.send("✅ Đã thiết lập sticky embed message cho kênh này.", delete_after=5)
 
     @commands.hybrid_command(name="remove-sticky", description="[Manage Messages] Xóa sticky message khỏi kênh")
     @commands.has_permissions(manage_messages=True)
