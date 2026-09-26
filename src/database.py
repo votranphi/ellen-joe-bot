@@ -9,6 +9,7 @@ class Database:
         self.client = MongoClient(uri, server_api=ServerApi('1'))
         self.db = self.client['discord_bot_db']
         self.collection = self.db['channel_mappings']
+        self.sticky_collection = self.db['sticky_messages']
         
         try:
             self.client.admin.command('ping')
@@ -41,5 +42,33 @@ class Database:
     async def remove_mapping(self, discord_id):
             result = await asyncio.to_thread(self.collection.delete_one, {"discord_id": discord_id})
             return result.deleted_count > 0
+
+    async def get_sticky_message(self, channel_id):
+        return await asyncio.to_thread(
+            self.sticky_collection.find_one,
+            {"channel_id": channel_id}
+        )
+
+    async def set_sticky_message(self, channel_id, message_id, message_type, content=None, embed=None):
+        data = {
+            "channel_id": channel_id,
+            "message_id": message_id,
+            "message_type": message_type,
+            "content": content,
+            "embed": embed
+        }
+        await asyncio.to_thread(
+            self.sticky_collection.update_one,
+            {"channel_id": channel_id},
+            {"$set": data},
+            upsert=True
+        )
+
+    async def remove_sticky_message(self, channel_id):
+        result = await asyncio.to_thread(
+            self.sticky_collection.delete_one,
+            {"channel_id": channel_id}
+        )
+        return result.deleted_count > 0
 
 db = Database()

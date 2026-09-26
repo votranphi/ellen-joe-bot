@@ -122,7 +122,9 @@ class Utility(commands.Cog):
             await self._sync_reward_role(ctx, target, percent, profile)
         await ctx.send(embed=embed)
 
-    ### COMMANDS SECTION BEGINS HERE ###
+    ########################################
+    ##### COMMANDS SECTION BEGINS HERE #####
+    ########################################
 
     @commands.hybrid_command(name="ping", description="Kiểm tra độ trễ kết nối của bot")
     async def ping(self, ctx):
